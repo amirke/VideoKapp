@@ -1,17 +1,23 @@
-# VideoKapp — ChronoMerge 3.8.3
+# VideoKapp — ChronoMerge 3.8.4
 
 Windows desktop video merging, conversion, GPS ride playback and AI-assisted editing.
 The application window and executable currently use the name ChronoMerge.
 This version targets **Windows x64**. It is not a web app and has not been ported or tested on macOS or Linux.
 
-## Run without installation (recommended)
+## Website launch and full installation
+
+Open [VideoKapp](https://amirke.github.io/VideoKapp/) for download and installation instructions. Download the release ZIP, Extract All, and run `Install.cmd`. This installs the bundled application for your Windows user, creates shortcuts and registers `videokapp://open` so the website can open the app. It does not convert the editor to a web app or upload your media. No administrator rights, Node.js or Git required. The unsigned installer may be restricted by Windows or organizational policy.
+
+The website requests an app launch but cannot verify that the app opened. Accept the browser confirmation if prompted. Updates require downloading and installing the new release. Old version folders and user data remain unchanged.
+
+## Run without installation (portable)
 
 1. Open [Releases](https://github.com/amirke/VideoKapp/releases).
 2. Download **VideoKapp-Windows-x64.zip** from the release assets (not GitHub's Source code ZIP).
 3. Extract the entire ZIP into a folder.
 4. Run **ChronoMerge.exe** inside the extracted folder.
 
-No Node.js, npm, Git or FFmpeg installation is needed for this portable download. Keep all extracted files together. Ollama and its models are optional and separate; Gemini and online maps require internet. The private repository requires signing into your GitHub account to download.
+No Node.js, npm, Git or FFmpeg installation is needed for this portable download. Keep all extracted files together. Ollama and its models are optional and separate; Gemini and online maps require internet. The repository and release downloads are public.
 
 ## Run from source (for development only)
 

@@ -7,6 +7,7 @@ const { saveReport } = require('./report.cjs');
 
 if (process.env.CHRONOMERGE_TEST_DATA) app.setPath('userData', process.env.CHRONOMERGE_TEST_DATA);
 let window, task, lastOutput, outputPath, lastReport;
+const primaryInstance = require('./desktop-launch.cjs').setupDesktopLaunch(app, () => window);
 const known = new Map();
 let conversionFolder;
 app.disableHardwareAcceleration();
@@ -23,7 +24,7 @@ function handle(name, callback) {
   });
 }
 
-app.whenReady().then(() => {
+if (primaryInstance) app.whenReady().then(() => {
   window = new BrowserWindow({
     width: 1180, height: 850, minWidth: 920, minHeight: 700,
     backgroundColor: '#101719', title: 'ChronoMerge', autoHideMenuBar: true,
