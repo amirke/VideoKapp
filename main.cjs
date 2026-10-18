@@ -6,7 +6,7 @@ const { createSampler } = require('./metrics.cjs');
 const { saveReport } = require('./report.cjs');
 
 if (process.env.CHRONOMERGE_TEST_DATA) app.setPath('userData', process.env.CHRONOMERGE_TEST_DATA);
-let window, task, lastOutput, outputPath, lastReport;
+let window, task, lastOutput, outputPath, lastReport, updateController;
 const primaryInstance = require('./desktop-launch.cjs').setupDesktopLaunch(app, () => window);
 const known = new Map();
 let conversionFolder;
@@ -17,7 +17,9 @@ function selected(ids) {
   return ids.map(id => { const f = known.get(id); if (!f) throw new Error('Please select the files again.'); return f; });
 }
 function event(type, payload) { if (window && !window.isDestroyed()) window.webContents.send(type, payload); }
+const registeredChannels = new Set();
 function handle(name, callback) {
+  registeredChannels.add(name);
   ipcMain.handle(name, async (_, ...args) => {
     try { return { ok: true, value: await callback(...args) }; }
     catch (error) { return { ok: false, error: error.message }; }
@@ -27,7 +29,7 @@ function handle(name, callback) {
 if (primaryInstance) app.whenReady().then(() => {
   window = new BrowserWindow({
     width: 1180, height: 850, minWidth: 920, minHeight: 700,
-    backgroundColor: '#101719', title: 'ChronoMerge', autoHideMenuBar: true,
+    backgroundColor: '#101719', title: 'VideoKapp - ChronoMerge', autoHideMenuBar: true,
     webPreferences: { preload: path.join(__dirname, 'preload.cjs'), contextIsolation: true, nodeIntegration: false, sandbox: true },
   });
   window.webContents.session.webRequest.onBeforeSendHeaders({urls:['https://tile.openstreetmap.org/*','https://a.tile.opentopomap.org/*','https://a.tile-cyclosm.openstreetmap.fr/*']},(details,callback)=>{details.requestHeaders['User-Agent']='ChronoMerge/2.3 (Windows desktop ride player)';callback({requestHeaders:details.requestHeaders});});
@@ -116,7 +118,7 @@ handle('merge', async (ids, compression) => {
   task=null;
  }
 });
-handle('cancel', () => { task?.abort(); });
+handle('cancel', () => { task?.abort(); updateController?.abort(); });
 handle('show-output', () => { if (lastOutput) shell.showItemInFolder(lastOutput); });
 handle('copy-report', () => { if (!lastReport) throw new Error('No report available yet.'); clipboard.writeText(lastReport); });
 handle('preview', async id => {
@@ -141,3 +143,28 @@ require('./ollama.cjs')({ai:aiController,dialog,handle,event,getWindow:()=>windo
 require('./gemini.cjs')({ai:aiController,dialog,handle,event,getWindow:()=>window,getTask:()=>task,setTask:value=>task=value});
 
 require('./ride-export.cjs')({ride:rideController,dialog,handle,event,getWindow:()=>window,getTask:()=>task,setTask:value=>task=value});
+
+let latestAppUpdate;
+handle('diagnostics-info', async () => {
+  const source = await require('node:fs/promises').readFile(path.join(__dirname, 'preload.cjs'), 'utf8');
+  const names = [...new Set([...source.matchAll(/ipcRenderer\.invoke\('([^']+)'/g)].map(match => match[1]))];
+  return {version: require('./package.json').version, electron: process.versions.electron, arch: process.arch, channels: names.map(name => ({name, registered: registeredChannels.has(name)}))};
+});
+handle('diagnostics-run', async options => {
+  if (task) throw Error('Stop or finish the current operation first.');
+  task = new AbortController();
+  try { return await require('./diagnostics.cjs').runDiagnostics({online: options?.online === true, geminiKey: String(options?.geminiKey || '').slice(0, 500), geminiModel: String(options?.geminiModel || '').slice(0, 200), ollamaModel: String(options?.ollamaModel || '').slice(0, 200), signal: task.signal, onProgress: p => event('diagnostics-progress', p)}); }
+  finally { task = null; }
+});
+handle('app-update-check', async () => {
+  if (updateController) throw Error('Update check already running.');
+  latestAppUpdate = null; updateController = new AbortController();
+  try {
+    latestAppUpdate = await require('./app-update.cjs').checkUpdate(require('./package.json').version, {signal: AbortSignal.any([updateController.signal, AbortSignal.timeout(12000)])});
+    return latestAppUpdate;
+  } finally { updateController = null; }
+});
+handle('app-update-download', async () => {
+  if (!latestAppUpdate?.available) throw Error('Check for a newer version first.');
+  await shell.openExternal(latestAppUpdate.download); return true;
+});

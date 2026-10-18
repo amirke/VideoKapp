@@ -69,3 +69,9 @@ button{background-color:#174a7b!important;border-color:#357bb6!important;color:#
 #ride-export-selection{flex:0 0 auto;margin:0 0 5px;font-size:11px}#ride-mark-in,#ride-mark-out{padding:7px;min-width:35px}
 
 .map-layer-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:8px 0;border:1px solid #547377;padding:10px}.map-layer-choices label{display:flex;flex-direction:column;gap:5px}.map-layer-choices select{width:100%;min-width:0}.map-credits{font-size:11px;margin:4px 0;color:#aabbbd}#ai-review-guide{padding:12px;border-left:4px solid #4bb9dc;background:#152c33}
+#page-tests progress { width: 100%; }
+#app-version { font-size: 16px; margin-left: 10px; white-space: nowrap; }
+#tests-results [data-test-status="pass"] td:nth-child(3) { color: #71d896; font-weight: 600; }
+#tests-results [data-test-status="fail"] td:nth-child(3) { color: #ff9393; font-weight: 600; }
+#tests-results td { white-space: normal; overflow-wrap: anywhere; }
+#tests-buttons td { white-space: normal; overflow-wrap: anywhere; }

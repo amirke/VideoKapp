@@ -1,4 +1,4 @@
-# VideoKapp — ChronoMerge 3.8.4
+# VideoKapp — ChronoMerge 3.8.5
 
 Windows desktop video merging, conversion, GPS ride playback and AI-assisted editing.
 The application window and executable currently use the name ChronoMerge.
@@ -34,6 +34,12 @@ Git does not synchronize your media or account connections.
 After setup, run `node package.cjs dist/ChronoMerge` and copy the entire resulting directory to another Windows x64 computer. Start `ChronoMerge.exe` inside it. Node.js is not required on the receiving computer. Do not copy only the EXE.
 
 Alternatively, open GitHub **Actions → Build Windows portable ZIP → Run workflow**. After a successful run, download the artifact, extract the ZIP inside it, and run `ChronoMerge.exe`. This workflow must complete successfully before its download can be considered verified.
+
+## Diagnostics and updates
+
+The Tests tab runs named component checks with progress and STOP, using a one-second synthetic clip. It lists every current button and backend action, and distinguishes wiring from end-to-end execution. File dialogs, uploads, AI inference and actual map rendering still require the relevant files/accounts and a real workflow. Optional online checks read service status without uploading video. Copy test report provides readable results.
+
+The installed version appears in the header. Check for updates queries GitHub and compares it numerically with the installed version. Download update opens the verified release download; extract and run Install.cmd to install it. No automatic installation or restart occurs.
 
 ## Main features
 
