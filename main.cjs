@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-only
-const { app, BrowserWindow, ipcMain, dialog, shell, clipboard } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell, clipboard, Menu } = require('electron');
 const path = require('node:path');
 const { inspect, merge, compatibility } = require('./engine.cjs');
 const { createSampler } = require('./metrics.cjs');
@@ -35,6 +35,7 @@ if (primaryInstance) app.whenReady().then(() => {
   window.webContents.session.webRequest.onBeforeSendHeaders({urls:['https://tile.openstreetmap.org/*','https://a.tile.opentopomap.org/*','https://a.tile-cyclosm.openstreetmap.fr/*']},(details,callback)=>{details.requestHeaders['User-Agent']='ChronoMerge/2.3 (Windows desktop ride player)';callback({requestHeaders:details.requestHeaders});});
   window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
   window.webContents.on('will-navigate', e => e.preventDefault());
+  require('./context-menu.cjs').attachContextMenu(window, Menu);
   window.loadFile(path.join(__dirname, 'index.html'));
   window.on('close', () => task?.abort());
 });

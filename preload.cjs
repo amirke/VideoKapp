@@ -2,12 +2,15 @@
 const { contextBridge, ipcRenderer } = require('electron');
 const actionListeners=new Set(),originalInvoke=ipcRenderer.invoke.bind(ipcRenderer);let actionSequence=0;
 ipcRenderer.invoke=async(channel,...args)=>{const id=++actionSequence,ignored=['ride-diagnostic','connection-status','check'].includes(channel);const emit=data=>{if(!ignored)for(const fn of actionListeners)fn(data);};emit({phase:'start',id,channel});try{const result=await originalInvoke(channel,...args);emit({phase:'end',id,channel,ok:result?.ok!==false,cancelled:result?.ok===true&&result.value===null,error:result?.error});return result;}catch(e){emit({phase:'end',id,channel,ok:false,error:e.message});throw e;}};
+function subscribe(channel, callback) {
+  ipcRenderer.on(channel, (_event, value) => { callback(value); });
+}
 contextBridge.exposeInMainWorld('api', {
- diagnosticsInfo:()=>ipcRenderer.invoke('diagnostics-info'),runDiagnostics:o=>ipcRenderer.invoke('diagnostics-run',o),onDiagnosticsProgress:fn=>ipcRenderer.on('diagnostics-progress',(_,p)=>fn(p)),checkAppUpdate:()=>ipcRenderer.invoke('app-update-check'),downloadAppUpdate:()=>ipcRenderer.invoke('app-update-download'),installAppUpdate:()=>ipcRenderer.invoke('app-update-install'),onAppUpdateProgress:fn=>ipcRenderer.on('app-update-progress',(_,p)=>fn(p)),
- rideExportPreview:r=>ipcRenderer.invoke('ride-export-preview',r),rideExportStart:o=>ipcRenderer.invoke('ride-export-start',o),rideExportFrame:r=>ipcRenderer.invoke('ride-export-frame',r),rideExportFinish:()=>ipcRenderer.invoke('ride-export-finish'),rideExportAbort:()=>ipcRenderer.invoke('ride-export-abort'),onRideExportProgress:fn=>ipcRenderer.on('ride-export-progress',(_,p)=>fn(p)),
- geminiAnalyze:o=>ipcRenderer.invoke('gemini-analyze',o),onGeminiProgress:fn=>ipcRenderer.on('gemini-progress',(_,p)=>fn(p)),
- ollamaStatus:()=>ipcRenderer.invoke('ollama-status'),ollamaStart:()=>ipcRenderer.invoke('ollama-start'),ollamaPull:model=>ipcRenderer.invoke('ollama-pull',model),ollamaAnalyze:o=>ipcRenderer.invoke('ollama-analyze',o),onOllamaProgress:fn=>ipcRenderer.on('ollama-progress',(_,p)=>fn(p)),
- onActionActivity:fn=>actionListeners.add(fn),
+ diagnosticsInfo:()=>ipcRenderer.invoke('diagnostics-info'),runDiagnostics:o=>ipcRenderer.invoke('diagnostics-run',o),onDiagnosticsProgress:fn=>subscribe('diagnostics-progress',fn),checkAppUpdate:()=>ipcRenderer.invoke('app-update-check'),downloadAppUpdate:()=>ipcRenderer.invoke('app-update-download'),installAppUpdate:()=>ipcRenderer.invoke('app-update-install'),onAppUpdateProgress:fn=>subscribe('app-update-progress',fn),
+ rideExportPreview:r=>ipcRenderer.invoke('ride-export-preview',r),rideExportStart:o=>ipcRenderer.invoke('ride-export-start',o),rideExportFrame:r=>ipcRenderer.invoke('ride-export-frame',r),rideExportFinish:()=>ipcRenderer.invoke('ride-export-finish'),rideExportAbort:()=>ipcRenderer.invoke('ride-export-abort'),onRideExportProgress:fn=>subscribe('ride-export-progress',fn),
+ geminiAnalyze:o=>ipcRenderer.invoke('gemini-analyze',o),onGeminiProgress:fn=>subscribe('gemini-progress',fn),
+ ollamaStatus:()=>ipcRenderer.invoke('ollama-status'),ollamaStart:()=>ipcRenderer.invoke('ollama-start'),ollamaPull:model=>ipcRenderer.invoke('ollama-pull',model),ollamaAnalyze:o=>ipcRenderer.invoke('ollama-analyze',o),onOllamaProgress:fn=>subscribe('ollama-progress',fn),
+ onActionActivity:fn=>{actionListeners.add(fn);},
  aiRide:()=>ipcRenderer.invoke('ai-ride'),aiGpsSave:data=>ipcRenderer.invoke('ai-gps-save',data),
  aiLoadProxy:()=>ipcRenderer.invoke('ai-load-proxy'),aiChoose:()=>ipcRenderer.invoke('ai-choose'),aiResize:o=>ipcRenderer.invoke('ai-resize',o),aiCopy:t=>ipcRenderer.invoke('ai-copy',t),aiImport:()=>ipcRenderer.invoke('ai-import'),aiExport:ids=>ipcRenderer.invoke('ai-export',ids),
   orderLogUseRide:()=>ipcRenderer.invoke('order-log-use-ride'),
@@ -58,7 +61,7 @@ contextBridge.exposeInMainWorld('api', {
   showOutput: () => ipcRenderer.invoke('show-output'),
   copyReport: () => ipcRenderer.invoke('copy-report'),
   preview: id => ipcRenderer.invoke('preview', id),
-  onStatus: callback => ipcRenderer.on('status', (_, value) => callback(value)),
-  onMetrics: callback => ipcRenderer.on('metrics', (_, value) => callback(value)),
-  onReport: callback => ipcRenderer.on('report', (_, value) => callback(value)),
+  onStatus: callback => subscribe('status', callback),
+  onMetrics: callback => subscribe('metrics', callback),
+  onReport: callback => subscribe('report', callback),
 });

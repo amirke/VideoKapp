@@ -1,4 +1,4 @@
-# VideoKapp — ChronoMerge 3.8.7
+# VideoKapp — ChronoMerge 3.8.8
 
 Windows desktop video merging, conversion, GPS ride playback and AI-assisted editing.
 The application window and executable currently use the name ChronoMerge.
@@ -8,7 +8,7 @@ This version targets **Windows x64**. It is not a web app and has not been porte
 
 Open [VideoKapp](https://amirke.github.io/VideoKapp/) for download and installation instructions. Download the release ZIP, Extract All, and run `Install.cmd`. This installs the bundled application for your Windows user, creates shortcuts and registers `videokapp://open` so the website can open the app. It does not convert the editor to a web app or upload your media. No administrator rights, Node.js or Git required. The unsigned installer may be restricted by Windows or organizational policy.
 
-The website requests an app launch but cannot verify that the app opened. Accept the browser confirmation if prompted. From version 3.8.7, Tests → Check & download update downloads changed components only. Install & restart switches to the verified new version. Previous application folders and user data remain unchanged.
+The website requests an app launch but cannot verify that the app opened. Accept the browser confirmation if prompted. In the application, Tests → Check & download update downloads changed components only. Install & restart switches to the verified new version. Previous application folders and user data remain unchanged.
 
 ## Run without installation (portable)
 
@@ -34,6 +34,10 @@ Git does not synchronize your media or account connections.
 After setup, run `node package.cjs dist/ChronoMerge` and copy the entire resulting directory to another Windows x64 computer. Start `ChronoMerge.exe` inside it. Node.js is not required on the receiving computer. Do not copy only the EXE.
 
 Alternatively, open GitHub **Actions → Build Windows portable ZIP → Run workflow**. After a successful run, download the artifact, extract the ZIP inside it, and run `ChronoMerge.exe`. This workflow must complete successfully before its download can be considered verified.
+
+## Copying text
+
+Select text, right-click and choose Copy (or Ctrl+C). Editable fields also offer Cut and Paste. Tests includes Copy test report for the complete diagnostic report.
 
 ## Diagnostics and updates
 
