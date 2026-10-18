@@ -1,0 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-only
+(()=>{const running=[],owners=new Map();function finish(a){if(a.done&&a.pending===0){a.button.dataset.actionState=a.failed?'error':a.cancelled?a.previous:'ok';a.button.removeAttribute('aria-busy');const i=running.indexOf(a);if(i>=0)running.splice(i,1);}}
+window.reportButtonFailure=()=>{const a=running.at(-1);if(a)a.failed=true;};
+window.api.onActionActivity?.(e=>{if(e.phase==='start'){const a=running.at(-1);if(a){a.pending++;owners.set(e.id,a);}}else{const a=owners.get(e.id);if(!a)return;owners.delete(e.id);a.pending--;a.failed||=!e.ok;a.cancelled||=e.cancelled;if(e.error)a.button.title=e.error;finish(a);}});
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.disabled)return;const a={button:b,previous:b.dataset.actionState||'default',pending:0,done:false,failed:false,cancelled:false};running.push(a);b.setAttribute('aria-busy','true');const fn=b.onclick;if(fn&&!fn.buttonTracked){const wrapped=function(ev){let result;try{result=fn.call(this,ev);}catch(error){a.failed=true;a.done=true;finish(a);throw error;}Promise.resolve(result).catch(()=>{a.failed=true;}).finally(()=>{a.done=true;finish(a);});b.onclick=fn;return result;};wrapped.buttonTracked=true;b.onclick=wrapped;}else setTimeout(()=>{a.done=true;finish(a);},0);},true);
+})();

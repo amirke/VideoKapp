@@ -1,0 +1,20 @@
+{
+  "name": "chronomerge",
+  "version": "3.8.3",
+  "description": "Chronological video merging, derived from LosslessCut",
+  "private": true,
+  "license": "GPL-2.0-only",
+  "main": "main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test test/*.test.cjs",
+    "test:gui": "node test/gui.cjs",
+    "package": "node package.cjs"
+  },
+  "devDependencies": {
+    "electron": "42.3.0",
+    "jsdom": "^27.4.0",
+    "maplibre-gl": "^6.9.0",
+    "playwright": "1.58.2"
+  }
+}
