@@ -4,7 +4,16 @@ Windows desktop video merging, conversion, GPS ride playback and AI-assisted edi
 The application window and executable currently use the name ChronoMerge.
 This version targets **Windows x64**. It is not a web app and has not been ported or tested on macOS or Linux.
 
-## Run from source on another Windows computer
+## Run without installation (recommended)
+
+1. Open [Releases](https://github.com/amirke/VideoKapp/releases).
+2. Download **VideoKapp-Windows-x64.zip** from the release assets (not GitHub's Source code ZIP).
+3. Extract the entire ZIP into a folder.
+4. Run **ChronoMerge.exe** inside the extracted folder.
+
+No Node.js, npm, Git or FFmpeg installation is needed for this portable download. Keep all extracted files together. Ollama and its models are optional and separate; Gemini and online maps require internet. The private repository requires signing into your GitHub account to download.
+
+## Run from source (for development only)
 
 1. Install Node.js 22 or newer: https://nodejs.org/en/download
 2. Clone this repository, or download its ZIP from GitHub and extract it.
