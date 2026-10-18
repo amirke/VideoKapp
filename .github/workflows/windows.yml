@@ -19,11 +19,17 @@ jobs:
       - name: Focused checks
         run: node --test test/ai-reuse.test.cjs test/ride-export.test.cjs test/route-progress.test.cjs
       - run: node package.cjs dist/ChronoMerge
+      - name: Build partial update components
+        run: node scripts/build-update.cjs dist/ChronoMerge dist/update
+      - name: Build small upgrade launcher
+        run: node scripts/build-bootstrap.cjs dist/update/VideoKapp-Update.zip
       - name: Create ZIP
         shell: powershell
         run: Compress-Archive -Path dist/ChronoMerge -DestinationPath dist/ChronoMerge-Windows-x64.zip
       - uses: actions/upload-artifact@v4
         with:
           name: ChronoMerge-Windows-x64
-          path: dist/ChronoMerge-Windows-x64.zip
+          path: |
+            dist/ChronoMerge-Windows-x64.zip
+            dist/update/*
           retention-days: 30

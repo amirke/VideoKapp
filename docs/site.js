@@ -23,7 +23,11 @@ element('check-update').addEventListener('click', async () => {
     const url = new URL(asset.browser_download_url);
     if (url.origin !== 'https://github.com' || !url.pathname.startsWith('/amirke/VideoKapp/releases/download/')) throw new Error('Invalid download');
     element('download').href = url.href;
-    element('update-download').href = url.href;
+    const patch = release.assets?.find(item => item.name === 'VideoKapp-Update.zip');
+    const patchURL = patch ? new URL(patch.browser_download_url) : url;
+    if (patchURL.origin !== 'https://github.com' || !patchURL.pathname.startsWith('/amirke/VideoKapp/releases/download/')) throw new Error('Invalid update download');
+    element('update-download').href = patchURL.href;
+    element('update-instructions').textContent = patch ? 'Extract the update ZIP → close VideoKapp → Update.cmd.' : 'Close VideoKapp → Extract All → Install.cmd.';
     element('update-download').hidden = false;
     element('update-instructions').hidden = false;
     element('update-status').textContent = `Latest release: ${release.tag_name}.`;

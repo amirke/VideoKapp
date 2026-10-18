@@ -144,7 +144,7 @@ require('./gemini.cjs')({ai:aiController,dialog,handle,event,getWindow:()=>windo
 
 require('./ride-export.cjs')({ride:rideController,dialog,handle,event,getWindow:()=>window,getTask:()=>task,setTask:value=>task=value});
 
-let latestAppUpdate;
+let latestAppUpdate, preparedUpdate, installingUpdate = false;
 handle('diagnostics-info', async () => {
   const source = await require('node:fs/promises').readFile(path.join(__dirname, 'preload.cjs'), 'utf8');
   const names = [...new Set([...source.matchAll(/ipcRenderer\.invoke\('([^']+)'/g)].map(match => match[1]))];
@@ -165,6 +165,32 @@ handle('app-update-check', async () => {
   } finally { updateController = null; }
 });
 handle('app-update-download', async () => {
+  if (!app.isPackaged) throw Error('Partial updates require the installed or portable Windows application.');
+  if (task) throw Error('Finish the current operation first.');
   if (!latestAppUpdate?.available) throw Error('Check for a newer version first.');
-  await shell.openExternal(latestAppUpdate.download); return true;
+  if (preparedUpdate?.manifest.version === latestAppUpdate.latest) return {ready: true, version: preparedUpdate.manifest.version, bytes: preparedUpdate.bytes};
+  task = new AbortController();
+  try {
+    const updater = require('./delta-update.cjs');
+    const manifest = await updater.readManifest(latestAppUpdate.latest, {signal: task.signal});
+    preparedUpdate = await updater.prepareUpdate({root: path.dirname(process.execPath), manifest, signal: task.signal, onProgress: p => event('app-update-progress', p)});
+    return {ready: true, version: manifest.version, bytes: preparedUpdate.bytes, components: preparedUpdate.components};
+  } finally {task = null;}
+});
+handle('app-update-install', async () => {
+  if (task) throw Error('Finish the current operation first.');
+  if (!preparedUpdate) throw Error('Download and verify the update first.');
+  if (installingUpdate) throw Error('Installation is already starting.');
+  installingUpdate = true; task = new AbortController();
+  const fs = require('node:fs/promises');
+  const helper = require('node:child_process').spawn(process.execPath, [path.join(__dirname, 'update-apply.cjs'), path.join(preparedUpdate.stage, 'plan.json'), String(process.pid)], {env: {...process.env, ELECTRON_RUN_AS_NODE: '1'}, detached: true, windowsHide: true, stdio: 'ignore'});
+  let helperError; helper.on('error', error => {helperError = error;}); helper.unref();
+  const ready = path.join(preparedUpdate.stage, 'helper-ready');
+  const deadline = Date.now() + 10000;
+  while (!await fs.stat(ready).then(() => true, () => false)) {
+    if (helperError || Date.now() > deadline) {helper.kill(); installingUpdate = false; task = null; throw helperError || Error('Update helper did not start. Current installation is unchanged.');}
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+  setTimeout(() => app.quit(), 500);
+  return {log: path.join(preparedUpdate.stage, 'update-log.txt')};
 });

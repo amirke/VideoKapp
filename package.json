@@ -1,6 +1,6 @@
 {
   "name": "chronomerge",
-  "version": "3.8.5",
+  "version": "3.8.6",
   "description": "Chronological video merging, derived from LosslessCut",
   "private": true,
   "license": "GPL-2.0-only",

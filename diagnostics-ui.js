@@ -87,13 +87,27 @@
       const r = result.value;
       $('app-update-state').textContent = `Installed: ${r.installed} · GitHub: ${r.latest} · ${r.available ? 'Update available' : r.ahead ? 'Installed version is ahead of the published release' : 'Up to date'} · Checked ${new Date(r.checkedAt).toLocaleTimeString()}`;
       $('app-download-update').hidden = !r.available;
+      if (r.available) await downloadChanged();
     } catch (e) {$('app-update-state').textContent = e.message; window.reportButtonFailure?.();}
     finally {$('app-check-update').disabled = false;}
   };
-  $('app-download-update').onclick = async () => {
-    const result = await window.api.downloadAppUpdate(); if (!result.ok) throw Error(result.error);
-    $('app-update-state').textContent = 'Download opened. Close the app, extract the ZIP and run Install.cmd.';
+  async function downloadChanged() {
+    $('app-download-update').disabled = true; $('app-install-update').hidden = true;
+    try {
+      const result = await window.api.downloadAppUpdate(); if (!result.ok) throw Error(result.error);
+      $('app-install-update').hidden = false;
+      $('app-download-update').hidden = true;
+      $('app-update-state').textContent = 'Update verified: ' + result.value.version + ' · ' + (result.value.bytes / 1048576).toFixed(1) + ' MB downloaded. Ready to install and restart.';
+    } finally {$('app-download-update').disabled = false;}
+  }
+  $('app-download-update').onclick = async () => {try {await downloadChanged();} catch(e) {$('app-update-state').textContent=e.message; window.reportButtonFailure?.();}};
+  $('app-install-update').onclick = async () => {
+    const result = await window.api.installAppUpdate(); if (!result.ok) { $('app-update-state').textContent=result.error; window.reportButtonFailure?.(); return; }
+    $('app-install-update').disabled=true;
+    $('app-update-state').textContent = 'Closing to install. Previous version retained. Log: ' + result.value.log;
   };
+  $('app-update-stop').onclick = async () => {await window.api.cancel(); $('app-update-state').textContent='Stopping update download…';};
+  window.api.onAppUpdateProgress?.(p => {if(p.progress === null) $('app-update-progress').removeAttribute('value'); else $('app-update-progress').value=p.progress; $('app-update-state').textContent=p.text;});
   window.api.diagnosticsInfo().then(result => {
     if (!result.ok) { $('tests-state').textContent = result.error; return; }
     report.version = result.value.version;
