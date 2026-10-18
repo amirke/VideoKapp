@@ -181,6 +181,7 @@ handle('app-update-install', async () => {
   if (task) throw Error('Finish the current operation first.');
   if (!preparedUpdate) throw Error('Download and verify the update first.');
   if (installingUpdate) throw Error('Installation is already starting.');
+  if (!await require('./restart-prompt.cjs').askRestart(dialog, window)) return {deferred: true};
   installingUpdate = true; task = new AbortController();
   const fs = require('node:fs/promises');
   const helper = require('node:child_process').spawn(process.execPath, [path.join(__dirname, 'update-apply.cjs'), path.join(preparedUpdate.stage, 'plan.json'), String(process.pid)], {env: {...process.env, ELECTRON_RUN_AS_NODE: '1'}, detached: true, windowsHide: true, stdio: 'ignore'});

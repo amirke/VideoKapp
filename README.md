@@ -1,4 +1,4 @@
-# VideoKapp — ChronoMerge 3.8.6
+# VideoKapp — ChronoMerge 3.8.7
 
 Windows desktop video merging, conversion, GPS ride playback and AI-assisted editing.
 The application window and executable currently use the name ChronoMerge.
@@ -8,7 +8,7 @@ This version targets **Windows x64**. It is not a web app and has not been porte
 
 Open [VideoKapp](https://amirke.github.io/VideoKapp/) for download and installation instructions. Download the release ZIP, Extract All, and run `Install.cmd`. This installs the bundled application for your Windows user, creates shortcuts and registers `videokapp://open` so the website can open the app. It does not convert the editor to a web app or upload your media. No administrator rights, Node.js or Git required. The unsigned installer may be restricted by Windows or organizational policy.
 
-The website requests an app launch but cannot verify that the app opened. Accept the browser confirmation if prompted. From version 3.8.6, Tests → Check & download update downloads changed components only. Install & restart switches to the verified new version. Previous application folders and user data remain unchanged.
+The website requests an app launch but cannot verify that the app opened. Accept the browser confirmation if prompted. From version 3.8.7, Tests → Check & download update downloads changed components only. Install & restart switches to the verified new version. Previous application folders and user data remain unchanged.
 
 ## Run without installation (portable)
 
@@ -39,7 +39,7 @@ Alternatively, open GitHub **Actions → Build Windows portable ZIP → Run work
 
 The Tests tab runs named component checks with progress and STOP, using a one-second synthetic clip. It lists every current button and backend action, and distinguishes wiring from end-to-end execution. File dialogs, uploads, AI inference and actual map rendering still require the relevant files/accounts and a real workflow. Optional online checks read service status without uploading video. Copy test report provides readable results.
 
-The installed version appears in the header. Check for updates queries GitHub and compares it numerically with the installed version. Check & download update compares the installed release with GitHub and automatically downloads only changed components (application code, maps, FFmpeg, Electron). Files are SHA-256 verified; unchanged components are copied locally, so a full second application folder temporarily requires disk space. STOP cancels preparation without changing the current installation. Install & restart closes the app, updates existing shortcuts and launches the new version. The previous folder is retained; launch it directly if recovery is needed. A launched process is not proof that every startup workflow succeeds.
+The installed version appears in the header. Check for updates queries GitHub and compares it numerically with the installed version. Check & download update compares the installed release with GitHub and automatically downloads only changed components (application code, maps, FFmpeg, Electron). Files are SHA-256 verified; unchanged components are copied locally, so a full second application folder temporarily requires disk space. STOP cancels preparation without changing the current installation. After download and verification, the app asks "Restart the program now?". Later keeps the app open and the prepared update available for this session. Install & restart asks again and, only after Restart now is selected, closes the app, updates existing shortcuts and launches the new version. The previous folder is retained; launch it directly if recovery is needed. A launched process is not proof that every startup workflow succeeds.
 
 For older versions, download VideoKapp-Update.zip from Releases, Extract All, close VideoKapp and run Update.cmd. This small bootstrap locates the installed application (or lets you choose it), then downloads changed components using the same updater. No full download is required when Electron and FFmpeg are unchanged. The full Windows ZIP remains available for first installation.
 

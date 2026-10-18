@@ -15,6 +15,10 @@ const {apply} = require('./update-apply.cjs');
     const next = Math.floor((p.progress || 0) * 10);
     if (p.phase !== phase || next !== bucket) {console.log(p.text); phase = p.phase; bucket = next;}
   }});
-  const result = await apply(plan);
+  const readline = require('node:readline/promises').createInterface({input: process.stdin, output: process.stdout});
+  let restart;
+  try {restart = /^y(es)?$/i.test((await readline.question('Restart the program now? [y/N]: ')).trim());} finally {readline.close();}
+  const result = await apply(plan, restart ? {} : {launchImpl: async () => {}});
+  if (!restart) console.log('Updated without starting the program. Open it from your shortcut when ready.');
   console.log(`Updated to ${result.installed}. Previous folder kept: ${result.previous}`);
 })().catch(e => {console.error('Update failed: ' + e.message + '\nPrevious application folder was not overwritten.'); process.exitCode = 1;});

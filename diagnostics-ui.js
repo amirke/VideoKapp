@@ -98,14 +98,17 @@
       $('app-install-update').hidden = false;
       $('app-download-update').hidden = true;
       $('app-update-state').textContent = 'Update verified: ' + result.value.version + ' · ' + (result.value.bytes / 1048576).toFixed(1) + ' MB downloaded. Ready to install and restart.';
+      await restartPrepared();
     } finally {$('app-download-update').disabled = false;}
   }
   $('app-download-update').onclick = async () => {try {await downloadChanged();} catch(e) {$('app-update-state').textContent=e.message; window.reportButtonFailure?.();}};
-  $('app-install-update').onclick = async () => {
+  async function restartPrepared() {
     const result = await window.api.installAppUpdate(); if (!result.ok) { $('app-update-state').textContent=result.error; window.reportButtonFailure?.(); return; }
+    if (result.value.deferred) { $('app-update-state').textContent='Update ready. Continue working; click Install & restart when ready.'; return; }
     $('app-install-update').disabled=true;
     $('app-update-state').textContent = 'Closing to install. Previous version retained. Log: ' + result.value.log;
   };
+  $('app-install-update').onclick = restartPrepared;
   $('app-update-stop').onclick = async () => {await window.api.cancel(); $('app-update-state').textContent='Stopping update download…';};
   window.api.onAppUpdateProgress?.(p => {if(p.progress === null) $('app-update-progress').removeAttribute('value'); else $('app-update-progress').value=p.progress; $('app-update-state').textContent=p.text;});
   window.api.diagnosticsInfo().then(result => {
