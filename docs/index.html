@@ -2,29 +2,29 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Download VideoKapp for Windows or open your installed video and GPS editing application.">
-<title>VideoKapp — Open or install</title>
-<link rel="stylesheet" href="site.css">
+<meta name="description" content="Install, open or update VideoKapp for Windows.">
+<title>VideoKapp</title><link rel="stylesheet" href="site.css">
 </head>
 <body>
-<header><a class="brand" href="./">VideoKapp</a><a href="https://github.com/amirke/VideoKapp">Source code</a></header>
+<header><a class="brand" href="./">VideoKapp</a><span>Windows x64</span></header>
 <main>
-<h1>Install or open VideoKapp</h1>
-<p class="intro">Windows x64 · Version 3.8.4 · Runs locally on your computer.</p>
 <div class="choices">
-<section class="card"><h2>Download &amp; install</h2><p>Install once on each computer. The package includes the required video tools.</p>
-<a class="button" id="download" href="https://github.com/amirke/VideoKapp/releases/download/v3.8.4/VideoKapp-Windows-x64.zip">Download ZIP — Windows x64</a>
-<p class="small">Version 3.8.4 · <a href="https://github.com/amirke/VideoKapp/releases/tag/v3.8.4">Release details &amp; checksum</a></p>
-<ol><li>Download the ZIP, then right-click it and select <strong>Extract All</strong>.</li><li>Open the extracted folder and double-click <strong>Install.cmd</strong>.</li><li>Wait for <strong>Installed successfully</strong>. The installer adds desktop and Start menu shortcuts and enables the website launch button.</li><li>Use <strong>Open VideoKapp</strong> on this page.</li></ol>
-<p class="small">Installed for your Windows user. No administrator rights required. On managed computers, your organization may restrict scripts or unsigned applications.</p>
-</section>
-<section class="card"><h2>Open installed application</h2><p>Opens VideoKapp, or brings its existing window to the front.</p>
+<section class="card"><h1>Open</h1>
 <a class="button" id="launch" href="videokapp://open">Open VideoKapp</a>
-<p id="launch-status" role="status" aria-live="polite">Install once on each computer to enable this button.</p>
-<details id="help"><summary>Nothing opened?</summary><ol><li>Accept your browser's request to open the external application, if shown.</li><li>If Windows cannot find an app for this link, follow the Download &amp; install instructions.</li><li>You can also open <strong>VideoKapp</strong> using its desktop shortcut.</li></ol><p>This page cannot verify whether the desktop app opened. It does not automatically download or reinstall anything.</p></details>
-
-</section></div>
-<details class="more"><summary>Optional AI tools, updates and portable use</summary><p>Ollama and its models are separate, optional downloads. Gemini needs your API key. Online maps and cloud services require internet.</p><p>For an update, close VideoKapp and repeat the download and installation steps. The installer selects the new version for shortcuts and website links; older version folders and your settings remain intact.</p><p>For portable use, extract the ZIP and run <strong>ChronoMerge.exe</strong> directly. Keep all extracted files together. Website launching requires running <strong>Install.cmd</strong>.</p><p>Installation location: <code>%LOCALAPPDATA%\Programs\VideoKapp\3.8.4</code>. User data remains in the existing ChronoMerge profile.</p></details>
-</main><footer><span>VideoKapp / ChronoMerge · GPL-2.0</span><a href="https://github.com/amirke/VideoKapp/issues">Report a problem</a></footer>
+<p id="launch-status" role="status" aria-live="polite">Already installed? Open it here.</p>
+<details id="help"><summary>Not opening?</summary><p>Accept the browser prompt, or run Install.cmd once to enable this button.</p></details>
+</section>
+<section class="card"><h2>Install</h2>
+<a class="button" id="download" href="https://github.com/amirke/VideoKapp/releases/download/v3.8.4/VideoKapp-Windows-x64.zip">Download for Windows</a>
+<ol><li>Download and <strong>Extract All</strong>.</li><li>Run <strong>Install.cmd</strong>.</li><li>Click <strong>Open VideoKapp</strong>.</li></ol>
+</section>
+</div>
+<section class="card updates"><h2>Update</h2>
+<div class="actions"><button class="button" id="check-update" type="button">Check for updates</button><a class="button" id="update-download" hidden>Download update</a></div>
+<p id="update-status" role="status" aria-live="polite">Checks GitHub. Installed version is not detected.</p>
+<p id="update-instructions" hidden>Close VideoKapp → Extract All → Install.cmd.</p>
+</section>
+<details class="more"><summary>More</summary><p>Portable use: extract the ZIP and run <strong>ChronoMerge.exe</strong>. Website launch requires installation.</p><p>Ollama and models are optional downloads. Gemini requires an API key.</p><p>Updates keep your settings. Installation runs under your Windows user.</p><a href="https://github.com/amirke/VideoKapp/releases/latest">Release details</a></details>
+</main><footer><a href="https://github.com/amirke/VideoKapp">Source code</a><a href="https://github.com/amirke/VideoKapp/issues">Report a problem</a></footer>
 <script src="site.js"></script>
 </body></html>

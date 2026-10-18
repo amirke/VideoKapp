@@ -1,27 +1,27 @@
 :root { color-scheme: dark; font-family: "Segoe UI", Arial, sans-serif; background: #151a20; color: #e6edf3; }
 * { box-sizing: border-box; }
-body { margin: 0; font-size: 14px; }
+body { margin: 0; font-size: 18px; }
 a { color: #91c4ff; text-underline-offset: 3px; }
 header, main, footer { max-width: 1000px; margin: auto; padding: 18px 24px; }
 header, footer { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
 header { border-bottom: 1px solid #39414c; }
-.brand { color: #e6edf3; font-size: 18px; font-weight: 600; text-decoration: none; }
-h1 { font-size: 24px; margin: 6px 0 8px; font-weight: 600; }
+.brand { color: #e6edf3; font-size: 24px; font-weight: 600; text-decoration: none; }
+h1 { font-size: 26px; margin: 0 0 12px; font-weight: 600; }
 .intro { margin: 0 0 20px; color: #b7c1ce; }
 .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
 .card { border: 1px solid #39414c; border-radius: 5px; padding: 20px; background: #1c232c; }
-h2 { font-size: 18px; margin: 0 0 12px; font-weight: 600; }
+h2 { font-size: 26px; margin: 0 0 12px; font-weight: 600; }
 p, li { line-height: 1.55; }
 .card > p, details p, details li { color: #bbc6d3; }
 .button { display: block; background: #205da8; color: white; font-weight: 600; text-decoration: none; padding: 11px 16px; border-radius: 4px; text-align: center; margin-top: 18px; outline-offset: 3px; }
 .button:hover { background: #2b70c0; }
 .button:focus-visible, summary:focus-visible { outline: 2px solid #91c4ff; }
-.small { font-size: 12px; color: #b7c1ce; }
+.small { font-size: 16px; color: #b7c1ce; }
 li { padding: 3px 0; }
 ol { padding-left: 20px; }
 summary { cursor: pointer; padding: 10px 0; font-weight: 600; }
 .more { margin-top: 18px; border-top: 1px solid #39414c; border-bottom: 1px solid #39414c; padding: 4px 0; }
-footer { color: #b7c1ce; font-size: 12px; }
+footer { color: #b7c1ce; font-size: 16px; }
 code { overflow-wrap: anywhere; }
 @media (max-width: 700px) {
   .choices { grid-template-columns: 1fr; }
@@ -29,3 +29,12 @@ code { overflow-wrap: anywhere; }
   header, footer { flex-wrap: wrap; }
   .card { padding: 16px; }
 }
+
+[hidden] { display: none !important; }
+.button { font: inherit; font-weight: 600; border: 0; cursor: pointer; }
+.button:disabled { opacity: .65; cursor: wait; }
+.button[data-state="success"] { background: #246c41; }
+.button[data-state="error"] { background: #a53737; }
+.updates { margin-top: 16px; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.actions .button { margin-top: 0; }
