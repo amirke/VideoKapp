@@ -103,9 +103,14 @@ async function prepareUpdate({root, manifest, signal, onProgress = () => {}, fet
       await extractImpl(archive, payload, c, {signal});
     }
     await verifyPayload(payload, manifest, signal); signal?.throwIfAborted();
+    // Remove only this update's archives after every extracted file passes verification.
+    for (const c of plan.changed) {
+      await fs.rm(path.join(stage, c.asset), {force: true});
+      await fs.rm(path.join(stage, c.asset + '.json'), {force: true});
+    }
     const result = {schema: 1, oldRoot: root, target, stage, payload, manifest, bytes: plan.bytes, components: plan.changed.map(c => c.id)};
     await fs.writeFile(path.join(stage, 'plan.json'), JSON.stringify(result));
-    onProgress({phase: 'ready', text: `Ready to install ${manifest.version}. Downloaded ${(plan.bytes / 1048576).toFixed(1)} MB.`, progress: 1});
+    onProgress({phase: 'ready', text: `Ready to install ${manifest.version}. Downloaded ${(plan.bytes / 1048576).toFixed(1)} MB. Temporary downloads deleted.`, progress: 1});
     return result;
   } catch (e) {await fs.rm(stage, {recursive: true, force: true}); throw e;}
 }

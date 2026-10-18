@@ -1,4 +1,4 @@
-# VideoKapp — ChronoMerge 3.8.8
+# VideoKapp — ChronoMerge 3.8.9
 
 Windows desktop video merging, conversion, GPS ride playback and AI-assisted editing.
 The application window and executable currently use the name ChronoMerge.

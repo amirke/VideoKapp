@@ -36,6 +36,13 @@ if (primaryInstance) app.whenReady().then(() => {
   window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
   window.webContents.on('will-navigate', e => e.preventDefault());
   require('./context-menu.cjs').attachContextMenu(window, Menu);
+  window.webContents.once('did-finish-load', async () => {
+    const ready = process.env.VIDEOKAPP_UPDATE_READY;
+    window.show(); window.focus();
+    if (!ready) return;
+    delete process.env.VIDEOKAPP_UPDATE_READY;
+    await require('node:fs/promises').writeFile(ready, 'ready').catch(() => {});
+  });
   window.loadFile(path.join(__dirname, 'index.html'));
   window.on('close', () => task?.abort());
 });

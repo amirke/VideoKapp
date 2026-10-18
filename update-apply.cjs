@@ -13,9 +13,25 @@ async function register(expected, next) {
     child.on('error', reject); child.on('exit', code => code ? reject(Error(detail || 'Shortcut update failed.')) : resolve());
   });
 }
-async function launch(exe) {
-  const env = {...process.env}; delete env.ELECTRON_RUN_AS_NODE;
-  await new Promise((resolve, reject) => {const child = spawn(exe, [], {env, detached: true, windowsHide: true, stdio: 'ignore'}); child.once('error', reject); child.once('spawn', () => {child.unref(); resolve();});});
+async function launch(exe, {spawnImpl = spawn, timeout = 30000} = {}) {
+  const readyDir = await fs.mkdtemp(path.join(require('node:os').tmpdir(), 'videokapp-launch-'));
+  const ready = path.join(readyDir, 'ready');
+  const env = {...process.env, VIDEOKAPP_UPDATE_READY: ready}; delete env.ELECTRON_RUN_AS_NODE;
+  let child, failure;
+  try {
+    child = spawnImpl(exe, [], {env, cwd: path.dirname(exe), detached: true, windowsHide: false, stdio: 'ignore'});
+    child.once('error', error => {failure = error;});
+    child.once('exit', code => {failure = Error('New application exited before opening its window (code ' + code + ').');});
+    const deadline = Date.now() + timeout;
+    while (!await fs.stat(ready).then(() => true, () => false)) {
+      if (failure) throw failure;
+      if (Date.now() >= deadline) throw Error('New application did not confirm an open window.');
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+  } finally {
+    child?.unref();
+    await fs.rm(ready, {force: true}); await fs.rmdir(readyDir);
+  }
 }
 async function apply(plan, {registerImpl = register, launchImpl = launch} = {}) {
   validatePlan(plan);
@@ -43,8 +59,8 @@ async function run(file, parentPID) {
     }
     await write('Verifying staged files.');
     const result = await apply(plan); await write(JSON.stringify(result));
-    await write('New application launched. Previous folder preserved for manual recovery.');
+    await write('New application window confirmed. Previous folder preserved for manual recovery.');
   } catch (e) {await write('FAILED: ' + e.message + '\nPrevious application: ' + path.join(plan.oldRoot, 'ChronoMerge.exe')); throw e;}
 }
 if (require.main === module) run(process.argv[2], Number(process.argv[3])).catch(e => {process.stderr.write(e.message); process.exitCode = 1;});
-module.exports = {apply, validatePlan};
+module.exports = {apply, validatePlan, launch};

@@ -13,6 +13,7 @@ async function fixture(fn) {
 test('downloads only changed component, reuses verified files, installs side-by-side',()=>fixture(async ({root,manifest,extractImpl})=>{
   const urls=[]; const plan=await D.prepareUpdate({root,manifest,extractImpl,fetchImpl:async url=>{urls.push(url);return new Response('zip');}});
   assert.equal(urls.length,1);assert.match(urls[0],/-app.zip$/);assert.deepEqual(plan.components,['app']);assert.equal(plan.bytes,3);
+  assert.equal((await fs.readdir(plan.stage)).some(name=>name.endsWith('.zip') || name.endsWith('.zip.json')),false);
   const calls=[];await apply(plan,{registerImpl:async(a,b)=>calls.push([a,b]),launchImpl:async exe=>calls.push(exe)});
   assert.equal(JSON.parse(await fs.readFile(path.join(root,'resources/app/package.json'),'utf8')).version,'3.8.6');
   assert.equal(JSON.parse(await fs.readFile(path.join(plan.target,'resources/app/package.json'),'utf8')).version,'3.8.7');assert.equal(calls.length,2);

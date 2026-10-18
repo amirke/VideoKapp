@@ -93,6 +93,7 @@
   };
   async function downloadChanged() {
     $('app-download-update').disabled = true; $('app-install-update').hidden = true;
+    $('app-update-size').textContent = 'Calculating download size…';
     try {
       const result = await window.api.downloadAppUpdate(); if (!result.ok) throw Error(result.error);
       $('app-install-update').hidden = false;
@@ -110,7 +111,7 @@
   };
   $('app-install-update').onclick = restartPrepared;
   $('app-update-stop').onclick = async () => {await window.api.cancel(); $('app-update-state').textContent='Stopping update download…';};
-  window.api.onAppUpdateProgress?.(p => {if(p.progress === null) $('app-update-progress').removeAttribute('value'); else $('app-update-progress').value=p.progress; $('app-update-state').textContent=p.text;});
+  window.api.onAppUpdateProgress?.(p => {if (p.phase === 'plan') $('app-update-size').textContent = `Download size: ${(p.bytes / 1048576).toFixed(2)} MB (${p.bytes.toLocaleString()} bytes). Temporary ZIP files are deleted after verification.`; if(p.progress === null) $('app-update-progress').removeAttribute('value'); else $('app-update-progress').value=p.progress; $('app-update-state').textContent=p.text;});
   window.api.diagnosticsInfo().then(result => {
     if (!result.ok) { $('tests-state').textContent = result.error; return; }
     report.version = result.value.version;
