@@ -1,4 +1,4 @@
-# VideoKapp — ChronoMerge 3.10.0
+# VideoKapp — ChronoMerge 3.10.1
 
 Windows desktop video merging, conversion, GPS ride playback and AI-assisted editing.
 The application window and executable currently use the name ChronoMerge.
@@ -78,3 +78,5 @@ In Ride Player, choose Map view > CesiumJS for a 3D globe using free Re:Earth te
 Video and GPS have separate seek bars. Video Play uses the displayed video frame time; GPS Play explores the whole activity, including intervals without video. Both use the original timeline and configured clock corrections. Follow location and Align with ride default to on. Live map PiP moves the same map over the video, with a draggable header and width slider; no encoding is involved.
 
 Optional Auto zoom targets a chosen count of app-added markers within 500 metres of the route: POIs and road junctions from OpenStreetMap, plus turns calculated locally. Search radius limits zoom-out; it does not count labels baked into map images. Nearby coordinates/radius are sent to the public [Overpass service](https://overpass.private.coffee/), never the video or GPX file. Lookup is cancellable, capped at 8 MB, cached for one hour and throttled to one request per 45 seconds. Service failures are shown; local turns still work. Public service availability and POI completeness are not guaranteed.
+
+Ride Player 3.10.1 adds optional map camera smoothing (default 1.5 seconds), a North up lock, and an explicit breakdown of applied video timestamp interpretation, recording-end adjustment, manual correction and GPS correction. Smoothing changes the camera only, not the GPS marker or synchronization. No clock correction is inferred or automatically applied.

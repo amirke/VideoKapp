@@ -18,10 +18,12 @@ test('separate GPS/video timelines share absolute time; PiP moves the same map; 
  const t=Date.UTC(2026,8,11,4);const points=Array.from({length:121},(_,i)=>({lat:32,lon:35+i*.0001,time:t+i*1000,group:0}));
  await w.applyAiRideState({video:{path:'test.mp4',url:'file:///test.mp4',duration:20},log:{segments:[{start:0,end:10,utcStart:t+30000,rate:1},{start:10,end:20,utcStart:t+90000,rate:1}]},route:{path:'route.gpx',points}});
  assert.equal($('ride-time').max,'20');assert.equal($('ride-gps-time').max,'120');assert.equal(Number($('ride-gps-time').value),30);
- $('ride-time').value=12;$('ride-time').oninput();assert.equal(Number($('ride-gps-time').value),92);assert.match($('ride-clock').textContent,/Difference: 0.0 s/);
+ $('ride-time').value=12;$('ride-time').oninput();assert.equal(Number($('ride-gps-time').value),92);assert.match($('ride-clock').textContent,/Calculated clock difference: 0.0 s/);
  $('ride-gps-time').value=5;$('ride-gps-time').oninput();assert.equal($('ride-video').hidden,true);assert.match($('ride-status').textContent,/No video/);
  $('ride-gps-time').value=35;$('ride-gps-time').oninput();assert.equal($('ride-video').currentTime,5);assert.equal($('ride-video').hidden,false);
  const stage=w.document.querySelector('.ride-map-stage');$('ride-live-pip').checked=true;$('ride-live-pip').onchange();assert.equal(stage.parentNode.className,'ride-live-box');$('ride-live-pip').checked=false;$('ride-live-pip').onchange();assert.equal(stage.parentNode.className,'ride-map-pane');
  assert($('ride-map-follow').checked);assert($('ride-map-align').checked);
  }finally{w.close();}
 });
+
+test('camera smoothing uses shortest heading turn and resets when seeking backwards',()=>{const {Filter}=require('../ride-camera.js'),f=new Filter();f.update({lat:32,lon:35},359,10000,0,2);const r=f.update({lat:32.001,lon:35.001},9,11000,1000,2);assert(r.position.lat>32&&r.position.lat<32.001);assert(r.heading<9||r.heading>359);const back=f.update({lat:31,lon:34},90,0,1100,2);assert.equal(back.position.lat,31);assert.equal(back.heading,90);const direct=f.update({lat:30,lon:33},180,1000,1200,0);assert.equal(direct.position.lat,30);assert.equal(direct.heading,180);});
