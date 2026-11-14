@@ -1,4 +1,4 @@
-# VideoKapp — ChronoMerge 3.9.0
+# VideoKapp — ChronoMerge 3.10.0
 
 Windows desktop video merging, conversion, GPS ride playback and AI-assisted editing.
 The application window and executable currently use the name ChronoMerge.
@@ -72,3 +72,9 @@ Do not commit media, `.cfg`, API keys, OAuth client secrets, logs, model files, 
 
 ### CesiumJS and map layers
 In Ride Player, choose Map view > CesiumJS for a 3D globe using free Re:Earth terrain (no API key). Base map selects the background; Overlay selects any existing provider with adjustable opacity. None removes the overlay. Re:Earth as an overlay supplies satellite imagery, not a second terrain surface. OpenFreeMap layers are rasterized locally and may load more slowly. GPS timestamps, full route, progress trail, Follow and PiP capture use the same timeline. Map view and layer selection can be saved in CFG. Internet is needed for map data.
+
+## Ride Player: synchronized GPS and live PiP
+
+Video and GPS have separate seek bars. Video Play uses the displayed video frame time; GPS Play explores the whole activity, including intervals without video. Both use the original timeline and configured clock corrections. Follow location and Align with ride default to on. Live map PiP moves the same map over the video, with a draggable header and width slider; no encoding is involved.
+
+Optional Auto zoom targets a chosen count of app-added markers within 500 metres of the route: POIs and road junctions from OpenStreetMap, plus turns calculated locally. Search radius limits zoom-out; it does not count labels baked into map images. Nearby coordinates/radius are sent to the public [Overpass service](https://overpass.private.coffee/), never the video or GPX file. Lookup is cancellable, capped at 8 MB, cached for one hour and throttled to one request per 45 seconds. Service failures are shown; local turns still work. Public service availability and POI completeness are not guaranteed.

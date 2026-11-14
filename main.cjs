@@ -126,7 +126,7 @@ handle('merge', async (ids, compression) => {
   task=null;
  }
 });
-handle('cancel', () => { task?.abort(); updateController?.abort(); });
+handle('cancel', () => { require('./ride-features.cjs').cancel(); task?.abort(); updateController?.abort(); });
 handle('show-output', () => { if (lastOutput) shell.showItemInFolder(lastOutput); });
 handle('copy-report', () => { if (!lastReport) throw new Error('No report available yet.'); clipboard.writeText(lastReport); });
 handle('preview', async id => {

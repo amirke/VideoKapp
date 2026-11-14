@@ -13,6 +13,8 @@ module.exports=function(c){let video=null,log=null,logPath=null,route=null;
  c.handle('ride-load',async()=>{idle();const p=await pick('Load ride parameters',['cfg']);if(!p)return null;if((await fs.stat(p)).size>100000)throw Error('Ride session is too large.');const data=JSON.parse(await fs.readFile(p,'utf8'));if(data.application!=='ChronoMerge ride'||data.version!==1)throw Error('Not a ride session CFG.');return {...view(),settings:data.settings};});
  c.handle('ride-reset',async()=>{idle();video=null;log=null;logPath=null;route=null;return view();});
  c.handle('ride-created-order-log',async()=>{idle();const data=c.getCreatedOrderLog();if(!data)throw Error('Create an order log first.');await timeline.verify(data.log,data.video.path);video=data.video;log=data.log;logPath=data.path;return view();});
+ c.handle('ride-features',options=>require('./ride-features.cjs').lookup(options));
+ c.handle('ride-features-cancel',()=>require('./ride-features.cjs').cancel());
  c.handle('ride-map-credits',url=>{const allowed=Object.values(require('./ride-providers.js').providers).flatMap(p=>p.credits.map(c=>c[1]));if(!allowed.includes(url))throw Error('Unknown map credit.');return c.shell.openExternal(url);});
  return {getVideo:()=>video,selectVideo:f=>{idle();if(video?.path!==f.path){video=f;log=null;logPath=null;}return view();}};
 };

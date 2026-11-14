@@ -30,6 +30,8 @@ contextBridge.exposeInMainWorld('api', {
   rideBuildLog:(ids,approved)=>ipcRenderer.invoke('ride-build-log',ids,approved),
   rideSave:settings=>ipcRenderer.invoke('ride-save',settings),
   rideLoad:()=>ipcRenderer.invoke('ride-load'),
+  rideFeatures:o=>ipcRenderer.invoke('ride-features',o),
+  cancelRideFeatures:()=>ipcRenderer.invoke('ride-features-cancel'),
   rideMapCredits:url=>ipcRenderer.invoke('ride-map-credits',url),
   chooseSpecific: () => ipcRenderer.invoke('choose-specific'),
   specificDestination: container => ipcRenderer.invoke('specific-destination', container),
