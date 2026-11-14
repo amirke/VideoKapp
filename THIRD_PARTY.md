@@ -45,3 +45,5 @@ Playwright is a development-only test dependency (Apache-2.0); it is not shipped
 as a runtime dependency.
 
 MapLibre GL JS 6.9.0 is bundled under BSD-3-Clause. See vendor/LICENSE.txt. Free map services retain their own attribution and usage terms, shown beside the map.
+
+CesiumJS 1.147.0 is bundled under Apache-2.0. See vendor/cesium/LICENSE.md and vendor/cesium/ThirdParty.json. Terrain: Re:Earth / Mapterhorn (CC BY 4.0), EGM2008.

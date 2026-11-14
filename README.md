@@ -1,4 +1,4 @@
-# VideoKapp — ChronoMerge 3.8.9
+# VideoKapp — ChronoMerge 3.9.0
 
 Windows desktop video merging, conversion, GPS ride playback and AI-assisted editing.
 The application window and executable currently use the name ChronoMerge.
@@ -69,3 +69,6 @@ For older versions, download VideoKapp-Update.zip from Releases, Extract All, cl
 Application: GPL-2.0-only, with LosslessCut-derived concatenation logic. See `LICENSE`, `THIRD_PARTY.md`, and `upstream/`. Electron and MapLibre license notices are retained. FFmpeg is downloaded separately; the installer checks the archive SHA-256 against the exact archive used during development. Public map services retain their own attribution and usage conditions.
 
 Do not commit media, `.cfg`, API keys, OAuth client secrets, logs, model files, or generated executables. `.gitignore` excludes common examples; review any newly added files before committing.
+
+### CesiumJS and map layers
+In Ride Player, choose Map view > CesiumJS for a 3D globe using free Re:Earth terrain (no API key). Base map selects the background; Overlay selects any existing provider with adjustable opacity. None removes the overlay. Re:Earth as an overlay supplies satellite imagery, not a second terrain surface. OpenFreeMap layers are rasterized locally and may load more slowly. GPS timestamps, full route, progress trail, Follow and PiP capture use the same timeline. Map view and layer selection can be saved in CFG. Internet is needed for map data.

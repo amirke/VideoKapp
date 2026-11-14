@@ -21,7 +21,11 @@ class RideMultiMap extends RideCanvasMap {
  fit(){if(!this.gl)return super.fit();if(!this.points.length)return;const bounds=new maplibregl.LngLatBounds();for(const p of this.points)bounds.extend([p.lon,p.lat]);this.gl.resize();this.gl.fitBounds(bounds,{padding:40,maxZoom:16,duration:0});}
  zoom(delta){if(this.gl)this.gl.zoomTo(this.gl.getZoom()+delta,{duration:0});else super.zoom(delta);}
  draw(){this.zoomStatus();if(!this.gl)return super.draw();if(!this.gl.getSource('ride-route')&&!this.gl.isStyleLoaded())return;
-  const overlay=this.overlaySettings();if(overlay.enabled&&!this.gl.getSource('ride-overlay')){this.gl.addSource('ride-overlay',{type:'raster',tiles:[RideProviders.providers.overlay.url],tileSize:256,maxzoom:14});this.gl.addLayer({id:'ride-overlay',type:'raster',source:'ride-overlay',paint:{'raster-opacity':overlay.opacity}},this.gl.getLayer('ride-route')?'ride-route':undefined);}if(this.gl.getLayer('ride-overlay')){this.gl.setLayoutProperty('ride-overlay','visibility',overlay.enabled?'visible':'none');this.gl.setPaintProperty('ride-overlay','raster-opacity',overlay.opacity);}
+  const overlay=this.overlaySettings(),layerKey=overlay.id+'|'+this.date;
+  if(this.overlayKey!==layerKey){if(this.gl.getLayer('ride-overlay'))this.gl.removeLayer('ride-overlay');if(this.gl.getSource('ride-overlay'))this.gl.removeSource('ride-overlay');this.overlayKey=layerKey;}
+  if(overlay.enabled&&!this.gl.getSource('ride-overlay')){if(overlay.id==='openfree')RideVectorTiles.register();this.gl.addSource('ride-overlay',{type:'raster',tiles:[RideProviders.tile(overlay.id,'{z}','{x}','{y}',this.date)],tileSize:256,maxzoom:RideProviders.providers[overlay.id].max});this.gl.addLayer({id:'ride-overlay',type:'raster',source:'ride-overlay',paint:{'raster-opacity':overlay.opacity}},this.gl.getLayer('ride-route')?'ride-route':undefined);}
+  if(this.gl.getLayer('ride-overlay')){this.gl.setLayoutProperty('ride-overlay','visibility',overlay.enabled?'visible':'none');this.gl.setPaintProperty('ride-overlay','raster-opacity',overlay.opacity);}
+
   if(this.drawnPoints!==this.points||this.drawnGap!==this.progressGap||!this.gl.getSource('ride-route')){
   const data={type:'Feature',geometry:{type:'MultiLineString',coordinates:this.routeLines()},properties:{}};
   if(this.gl.getSource('ride-route'))this.gl.getSource('ride-route').setData(data);else{this.gl.addSource('ride-route',{type:'geojson',data});this.gl.addLayer({id:'ride-route',type:'line',source:'ride-route',paint:{'line-color':'#fbbe4a','line-width':4}});}
