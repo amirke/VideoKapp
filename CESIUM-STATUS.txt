@@ -1,1 +1,0 @@
-CesiumJS integration is pending a Content Security Policy decision. Do not publish 3.9.0 yet. The existing strict policy blocks the bundled Cesium widget/decoder initialization. Seven map tests pass; live Cesium tests passed only before the app CSP was applied. The app CSP has NOT been weakened. Current stable release remains 3.8.9.

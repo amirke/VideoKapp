@@ -47,3 +47,5 @@ as a runtime dependency.
 MapLibre GL JS 6.9.0 is bundled under BSD-3-Clause. See vendor/LICENSE.txt. Free map services retain their own attribution and usage terms, shown beside the map.
 
 CesiumJS 1.147.0 is bundled under Apache-2.0. See vendor/cesium/LICENSE.md and vendor/cesium/ThirdParty.json. Terrain: Re:Earth / Mapterhorn (CC BY 4.0), EGM2008.
+Cesium widgets/decoders require dynamic JavaScript and WebAssembly compilation, so script-src allows unsafe-eval (explicitly approved by the project owner). Script files remain restricted to bundled local sources; Electron context isolation and disabled renderer Node integration are unchanged.
+The owner also explicitly approved blob: script sources for Cesium-generated local worker imports. No external JavaScript hosts are allowed.
