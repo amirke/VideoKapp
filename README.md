@@ -1,4 +1,4 @@
-# VideoKapp — ChronoMerge 3.12.0
+# VideoKapp — ChronoMerge 3.12.1
 
 Windows desktop video merging, conversion, GPS ride playback and AI-assisted editing.
 The application window and executable currently use the name ChronoMerge.
@@ -79,16 +79,18 @@ Video and GPS have separate seek bars. Video Play uses the displayed video frame
 
 Optional Auto zoom targets a chosen count of app-added markers within 500 metres of the route: POIs and road junctions from OpenStreetMap, plus turns calculated locally. Search radius limits zoom-out; it does not count labels baked into map images. Nearby coordinates/radius are sent to the public [Overpass service](https://overpass.private.coffee/), never the video or GPX file. Lookup is cancellable, capped at 8 MB, cached for one hour and throttled to one request per 45 seconds. Service failures are shown; local turns still work. Public service availability and POI completeness are not guaranteed.
 
-Ride Player 3.12.0 adds optional map camera smoothing (default 1.5 seconds), a North up lock, and an explicit breakdown of applied video timestamp interpretation, recording-end adjustment, manual correction and GPS correction. Smoothing changes the camera only, not the GPS marker or synchronization. No clock correction is inferred or automatically applied.
+Ride Player 3.12.1 adds optional map camera smoothing (default 1.5 seconds), a North up lock, and an explicit breakdown of applied video timestamp interpretation, recording-end adjustment, manual correction and GPS correction. Smoothing changes the camera only, not the GPS marker or synchronization. No clock correction is inferred or automatically applied.
 
-## Live timing calibration and Hebrew vector labels (3.12.0)
+## Live timing calibration and Hebrew vector labels (3.12.1)
 
 The Video → GPS offset field above the video is the same manual correction used by Ride Player, not an additional offset. Positive values select later GPS timestamps. The video clock and selected GPS clock are shown separately; the blue reference marker is the GPS coordinate before manual correction, and red is after correction. Neither a camera watermark nor a zero calculated clock difference proves synchronization to the GPS device. No offset is inferred or automatically applied.
 
 Labels layer is independent of Base map and Overlay. OpenFreeMap Liberty and Bright use native MapLibre symbol layers, prefer name:he when present, and fall back to the local name. They use Standard view (selecting them switches from Cesium); Re:Earth provides terrain in this view. Text stays screen-aligned. EOX labels/roads is also selectable, as a raster layer with provider-defined language. Native vector labels are supported in Ride Player and the AI preview. These are two styles of OpenFreeMap, not two independent map datasets. Hebrew availability varies by feature.
 
-The live Video → GPS offset control uses minutes in multiples of 15, with −15 min / +15 min buttons. Saved parameters continue to store seconds for compatibility. Existing saved offsets are not silently rounded; the next button press moves to the next quarter-hour boundary.
+Video → GPS offset combines a quarter-hour minutes field with Fine offset (seconds). Both ±15 minute and ±1 second buttons are available. Quarter-hour changes preserve the fine correction; the total is saved in seconds.
 
-## Ride Player layout (3.12.0)
+## Ride Player layout (3.12.1)
 
 The page follows the working sequence: file loading, paired video/GPS viewing, synchronization, map appearance, and export. File buttons and their paths share three cards. Advanced timing/map controls and diagnostics are collapsible. The before-offset marker is hidden at zero offset and repositions when the map or PiP is resized. Existing control IDs, CFG operations, draggable split and PiP behavior are preserved.
+
+The GPS target clock shows milliseconds and the selected zone offset. A separate line reports original file sample timestamps (before GPS clock correction), or the two source timestamps used for interpolation. Millisecond display is not a claim of millisecond GPS measurement accuracy.

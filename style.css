@@ -97,3 +97,5 @@ button{background-color:#174a7b!important;border-color:#357bb6!important;color:#
 #ride-panel #ride-export-panel>summary,#ride-panel #ride-diagnostics-card>summary{font-size:18px}#ride-panel #ride-diagnostics-card pre{max-height:320px;overflow:auto}
 @media(max-width:1000px){#ride-files-card{display:block}#ride-files-card>.button-row{margin:8px 0}#ride-panel .ride-card{padding:12px}.ride-file-grid{gap:8px}#ride-panel .ride-view-toolbar{gap:10px}#ride-panel .map-layer-choices{grid-template-columns:1fr}#ride-panel .video-playback-row label{font-size:10px}}
 #ride-panel .map-layer-choices>span:empty{display:none}#ride-panel #ride-map-card details>button{margin:8px 0}#ride-panel #ride-live-offset{background:#101d22;color:#e4f0f4;border:1px solid #52727e;border-radius:7px;padding:8px}
+
+#ride-panel #ride-fine-offset{width:100px;background:#101d22;color:#e4f0f4;border:1px solid #52727e;border-radius:7px;padding:8px}#ride-panel #ride-gps-samples{font-size:11px;line-height:1.4}
