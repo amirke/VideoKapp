@@ -15,13 +15,13 @@ test('separate GPS/video timelines share absolute time; PiP moves the same map; 
  w.HTMLMediaElement.prototype.pause=function(){};w.HTMLMediaElement.prototype.load=function(){};w.HTMLCanvasElement.prototype.getContext=()=>new Proxy({},{get:()=>()=>{}});w.api={cancelRideFeatures:()=>{}};
  try{
  w.eval(['ride-data.js','ride-providers.js','ride-map.js','ride-multimap.js','ride-time.js','ride-camera.js','ride-interest.js','ride-ui.js','ride-live.js'].map(f=>fs.readFileSync(f,'utf8')).join('\n'));
- const t=Date.UTC(2026,8,11,4);const points=Array.from({length:121},(_,i)=>({lat:32,lon:35+i*.0001,time:t+i*1000,group:0}));
+ const t=Date.UTC(2026,8,11,4);const points=Array.from({length:2200},(_,i)=>({lat:32,lon:35+i*.0001,time:t+i*1000,group:0}));
  await w.applyAiRideState({video:{path:'test.mp4',url:'file:///test.mp4',duration:20},log:{segments:[{start:0,end:10,utcStart:t+30000,rate:1},{start:10,end:20,utcStart:t+90000,rate:1}]},route:{path:'route.gpx',points}});
- assert.equal($('ride-time').max,'20');assert.equal($('ride-gps-time').max,'120');assert.equal(Number($('ride-gps-time').value),30);
+ assert.equal($('ride-time').max,'20');assert.equal($('ride-gps-time').max,'2199');assert.equal(Number($('ride-gps-time').value),30);
  $('ride-time').value=12;$('ride-time').oninput();assert.equal(Number($('ride-gps-time').value),92);assert.match($('ride-clock').textContent,/Selected GPS − video clock: 0.0 s/);
  $('ride-gps-time').value=5;$('ride-gps-time').oninput();assert.equal($('ride-video').hidden,true);assert.match($('ride-status').textContent,/No video/);
  $('ride-gps-time').value=35;$('ride-gps-time').oninput();assert.equal($('ride-video').currentTime,5);assert.equal($('ride-video').hidden,false);
- $('ride-live-offset').value=10;$('ride-live-offset').oninput();assert.equal(Number($('ride-offset').value),10);assert.equal(Number($('ride-gps-time').value),45);assert.equal($('ride-video').currentTime,5);assert.match($('ride-sync-preview').textContent,/Applied offset: 10 s/);$('ride-offset-zero').onclick();assert.equal(Number($('ride-gps-time').value),35);
+ $('ride-live-offset').value=15;$('ride-live-offset').onchange();assert.equal(Number($('ride-offset').value),900);assert.equal(Number($('ride-gps-time').value),935);assert.equal($('ride-video').currentTime,5);assert.match($('ride-sync-preview').textContent,/Applied offset: 15 min/);$('ride-offset-plus').onclick();assert.equal(Number($('ride-offset').value),1800);$('ride-offset-minus').onclick();assert.equal(Number($('ride-offset').value),900);$('ride-live-offset').value=1;$('ride-live-offset').onchange();assert.equal(Number($('ride-offset').value),900);$('ride-offset-zero').onclick();assert.equal(Number($('ride-gps-time').value),35);
  const stage=w.document.querySelector('.ride-map-stage');$('ride-live-pip').checked=true;$('ride-live-pip').onchange();assert.equal(stage.parentNode.className,'ride-live-box');$('ride-live-pip').checked=false;$('ride-live-pip').onchange();assert.equal(stage.parentNode.className,'ride-map-pane');
  assert($('ride-map-follow').checked);assert($('ride-map-align').checked);
  }finally{w.close();}
