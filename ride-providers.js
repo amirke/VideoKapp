@@ -3,6 +3,8 @@
 const osm='https://www.openstreetmap.org/copyright',eox='https://maps.eox.at/';
 const satellite='https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2024_3857/default/GoogleMapsCompatible/{z}/{y}/{x}.jpg';
 const providers={
+ 'openfree-labels':{name:'OpenFreeMap Liberty — Hebrew vector labels',labelStyle:'liberty',url:'ridevector://labels/{z}/{x}/{y}',max:18,credits:[['OpenFreeMap','https://openfreemap.org/'],['© OpenMapTiles','https://openmaptiles.org/'],['© OpenStreetMap contributors',osm]],note:'Native vector text in Standard view. Hebrew when available; local names otherwise.'},
+ 'openfree-bright-labels':{name:'OpenFreeMap Bright — Hebrew vector labels',labelStyle:'bright',url:'ridevector://bright-labels/{z}/{x}/{y}',max:18,credits:[['OpenFreeMap','https://openfreemap.org/'],['© OpenMapTiles','https://openmaptiles.org/'],['© OpenStreetMap contributors',osm]],note:'Native vector text in Standard view. Hebrew when available; local names otherwise.'},
  overlay:{name:'EOX transparent labels / roads',url:'https://tiles.maps.eox.at/wmts/1.0.0/overlay_bright_3857/default/GoogleMapsCompatible/{z}/{y}/{x}.png',max:14,credits:[['© OpenStreetMap contributors',osm],['Overlay rendering © EOX and MapServer',eox]],note:'Transparent reference overlay. Shared public service.'},
  osm:{name:'OpenStreetMap',url:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',max:19,credits:[['© OpenStreetMap contributors',osm]],note:'Street map. Shared service; visible tiles only.'},
  opentopo:{name:'OpenTopoMap',url:'https://a.tile.opentopomap.org/{z}/{x}/{y}.png',max:17,credits:[['© OpenStreetMap contributors',osm],['SRTM · © OpenTopoMap (CC BY-SA)', 'https://opentopomap.org/about']],note:'Topographic map with contour lines. Shared service.'},

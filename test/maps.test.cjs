@@ -21,7 +21,7 @@ test('every existing provider is selectable as overlay and survives saved route 
  const dom=new JSDOM(fs.readFileSync('index.html','utf8'),{runScripts:'outside-only'}),w=dom.window;
  w.RideProviders=P;w.HTMLCanvasElement.prototype.getContext=()=>null;
  try {w.eval(fs.readFileSync('ride-map.js','utf8'));const m=new w.RideMap(w.document.getElementById('ride-map'),()=>{});m.bindRouteControls('ride');m.draw=()=>{};
- for(const id of Object.keys(P.providers)){for(const prefix of ['ride','ai'])assert([...w.document.getElementById(prefix+'-overlay').options].some(o=>o.value===id));w.document.getElementById('ride-overlay').value=id;const saved=m.routeView();w.document.getElementById('ride-overlay').value='none';m.applyRouteView(saved);assert.equal(m.overlaySettings().id,id);assert(m.overlaySettings().enabled);}
+ for(const id of Object.keys(P.providers).filter(id=>!P.providers[id].labelStyle)){for(const prefix of ['ride','ai'])assert([...w.document.getElementById(prefix+'-overlay').options].some(o=>o.value===id));w.document.getElementById('ride-overlay').value=id;const saved=m.routeView();w.document.getElementById('ride-overlay').value='none';m.applyRouteView(saved);assert.equal(m.overlaySettings().id,id);assert(m.overlaySettings().enabled);}
  assert.equal(w.document.querySelectorAll('#ride-map-renderer').length,1);
  }finally{w.close();}
 });
