@@ -12,7 +12,7 @@ test('OSM junction requires three connected neighbors, and incomplete result is 
 });
 test('separate GPS/video timelines share absolute time; PiP moves the same map; gaps clear position',async()=>{
  const dom=new JSDOM(fs.readFileSync('index.html','utf8'),{runScripts:'outside-only',pretendToBeVisual:true}),w=dom.window,$=id=>w.document.getElementById(id);
- let paused=true;Object.defineProperty(w.HTMLMediaElement.prototype,'paused',{get:()=>paused});w.HTMLMediaElement.prototype.pause=function(){paused=true;this.onpause?.();};w.HTMLMediaElement.prototype.play=async function(){paused=false;this.onplay?.();};w.HTMLMediaElement.prototype.load=function(){};w.HTMLCanvasElement.prototype.getContext=()=>new Proxy({},{get:()=>()=>{}});w.api={cancelRideFeatures:()=>{}};
+ let paused=true;Object.defineProperty(w.HTMLMediaElement.prototype,'paused',{get:()=>paused});w.HTMLMediaElement.prototype.pause=function(){paused=true;this.onpause?.();};w.HTMLMediaElement.prototype.play=async function(){paused=false;this.onplay?.();};w.HTMLMediaElement.prototype.load=function(){};w.HTMLCanvasElement.prototype.getContext=()=>new Proxy({},{get:()=>()=>{}});let persisted=null;w.api={cancelRideFeatures:()=>{},rideOffsetSave:async seconds=>{persisted=seconds;return {ok:true,value:{seconds}};}};
  try{
  w.eval(['ride-data.js','ride-providers.js','ride-map.js','ride-multimap.js','ride-time.js','ride-camera.js','ride-interest.js','ride-ui.js','ride-live.js'].map(f=>fs.readFileSync(f,'utf8')).join('\n'));
  const t=Date.UTC(2026,8,11,4);const points=Array.from({length:2200},(_,i)=>({lat:32,lon:35+i*.0001,time:t+i*1000,group:0}));
@@ -27,6 +27,7 @@ test('separate GPS/video timelines share absolute time; PiP moves the same map; 
  $('ride-video').currentTime=5.5;$('ride-video').onseeked();assert.match($('ride-gps-clock').textContent,/\.500/);assert.match($('ride-gps-samples').textContent,/Interpolated between GPS samples/);
  $('ride-fine-offset').value=-123.5;$('ride-fine-offset').onchange();assert.equal(Number($('ride-offset').value),-123.5);$('ride-offset-zero').onclick();
  const stage=w.document.querySelector('.ride-map-stage');$('ride-live-pip').checked=true;$('ride-live-pip').onchange();assert.equal(stage.parentNode.className,'ride-live-box');$('ride-live-pip').checked=false;$('ride-live-pip').onchange();assert.equal(stage.parentNode.className,'ride-map-pane');
+ $('ride-live-offset').value=-63;$('ride-fine-offset').value=-11;await $('ride-offset-save').onclick();assert.equal(persisted,-3791);assert.equal(Number($('ride-offset').value),-3791);assert.equal($('ride-offset-save').dataset.actionState,'ok');assert.match($('ride-offset-saved').textContent,/-63 min -11 s/);$('ride-second-plus').onclick();assert.equal($('ride-offset-save').dataset.actionState,'default');assert.equal(persisted,-3791);
  assert($('ride-map-follow').checked);assert($('ride-map-align').checked);
  }finally{w.close();}
 });

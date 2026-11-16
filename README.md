@@ -1,4 +1,4 @@
-# VideoKapp — ChronoMerge 3.12.3
+# VideoKapp — ChronoMerge 3.12.4
 
 Windows desktop video merging, conversion, GPS ride playback and AI-assisted editing.
 The application window and executable currently use the name ChronoMerge.
@@ -79,9 +79,9 @@ Video and GPS have separate seek bars. Video Play uses the displayed video frame
 
 Optional Auto zoom targets a chosen count of app-added markers within 500 metres of the route: POIs and road junctions from OpenStreetMap, plus turns calculated locally. Search radius limits zoom-out; it does not count labels baked into map images. Nearby coordinates/radius are sent to the public [Overpass service](https://overpass.private.coffee/), never the video or GPX file. Lookup is cancellable, capped at 8 MB, cached for one hour and throttled to one request per 45 seconds. Service failures are shown; local turns still work. Public service availability and POI completeness are not guaranteed.
 
-Ride Player 3.12.3 adds optional map camera smoothing (default 1.5 seconds), a North up lock, and an explicit breakdown of applied video timestamp interpretation, recording-end adjustment, manual correction and GPS correction. Smoothing changes the camera only, not the GPS marker or synchronization. No clock correction is inferred or automatically applied.
+Ride Player 3.12.4 adds optional map camera smoothing (default 1.5 seconds), a North up lock, and an explicit breakdown of applied video timestamp interpretation, recording-end adjustment, manual correction and GPS correction. Smoothing changes the camera only, not the GPS marker or synchronization. No clock correction is inferred or automatically applied.
 
-## Live timing calibration and Hebrew vector labels (3.12.3)
+## Live timing calibration and Hebrew vector labels (3.12.4)
 
 The Video → GPS offset field above the video is the same manual correction used by Ride Player, not an additional offset. Positive values select later GPS timestamps. The video clock and selected GPS clock are shown separately; the blue reference marker is the GPS coordinate before manual correction, and red is after correction. Neither a camera watermark nor a zero calculated clock difference proves synchronization to the GPS device. No offset is inferred or automatically applied.
 
@@ -89,10 +89,12 @@ Labels layer is independent of Base map and Overlay. OpenFreeMap Liberty and Bri
 
 Video → GPS offset accepts numeric minutes and seconds, including negative and fractional values (combined limit: one year). ±15 minute and ±1 second buttons remain available. The total is saved in seconds. Live PiP width ranges from 10–95%; drag its border or corners to resize while retaining the map aspect ratio. Map zoom can reach level 0. Video and GPS play buttons show their current play/pause state.
 
-## Ride Player layout (3.12.3)
+## Ride Player layout (3.12.4)
 
 The page follows the working sequence: file loading, paired video/GPS viewing, synchronization, map appearance, and export. File buttons and their paths share three cards. Advanced timing/map controls and diagnostics are collapsible. The before-offset marker is hidden at zero offset and repositions when the map or PiP is resized. Existing control IDs, CFG operations, draggable split and PiP behavior are preserved.
 
 The GPS target clock shows milliseconds and the selected zone offset. A separate line reports original file sample timestamps (before GPS clock correction), or the two source timestamps used for interpolation. Millisecond display is not a claim of millisecond GPS measurement accuracy.
 
 Auto recording-time interpretation checks original metadata against source duration and a strict timestamped filename. Only end-time agreement within two seconds triggers an inferred camera-wall start; explicit capture dates and ambiguous quarter-hour timezone differences are not overridden. New timelines retain raw metadata and evidence, leaving UTC unknown for inferred camera-wall times until a video zone is selected. Auto also reads legacy timelines without rewriting them. Manual offsets stay active: reset an old compensating offset when changing interpretation. Merge reports list the decisions; they are not synchronization inputs. Watermark accuracy and GPS alignment are not proven by this inference.
+
+Save offset stores the current combined minute/second correction in ride-offset.cfg under the application user-data folder. It restores on startup; edits are not saved until the button is pressed. This is a global remembered offset, not linked to media filenames. Loading a ride CFG can override the current value without overwriting the saved offset.

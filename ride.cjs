@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 const fs=require('node:fs/promises'),path=require('node:path'),{pathToFileURL}=require('node:url'),timeline=require('./timeline.cjs');
 module.exports=function(c){let video=null,log=null,logPath=null,route=null;
+ const offsetPath=()=>path.join(c.getUserData(),'ride-offset.cfg');
+ const validOffset=n=>typeof n==='number'&&Number.isFinite(n)&&Math.abs(n)<=31536000;
+ c.handle('ride-offset-save',async seconds=>{if(!validOffset(seconds))throw Error('Invalid offset.');const file=offsetPath();await fs.mkdir(path.dirname(file),{recursive:true});await fs.writeFile(file,JSON.stringify({application:'VideoKapp offset',version:1,seconds},null,2));return {seconds,path:file};});
+ c.handle('ride-offset-load',async()=>{try{const data=JSON.parse(await fs.readFile(offsetPath(),'utf8'));if(data.application!=='VideoKapp offset'||data.version!==1||!validOffset(data.seconds))throw Error('Invalid saved offset.');return {seconds:data.seconds,path:offsetPath()};}catch(e){if(e.code==='ENOENT')return null;throw e;}});
  const idle=()=>{if(c.getTask())throw Error('Wait for processing to finish.');};
  async function readRoute(p){const stat=await fs.stat(p);if(stat.size>20000000)throw Error('Route file exceeds 20 MB.');const ext=path.extname(p).toLowerCase();if(!['.fit','.gpx','.kml'].includes(ext))throw Error('Choose GPX, FIT or KML.');const data=await fs.readFile(p);return {path:p,points:ext==='.fit'?require('./fit.cjs').parseFIT(data):null,text:ext!=='.fit'?data.toString('utf8'):null};}
  const view=()=>({video:video?{...video,url:pathToFileURL(video.path).href}:null,log,logPath,route});

@@ -28,6 +28,8 @@ contextBridge.exposeInMainWorld('api', {
   rideLog:()=>ipcRenderer.invoke('ride-log'),
   rideRoute:()=>ipcRenderer.invoke('ride-route'),
   rideBuildLog:(ids,approved)=>ipcRenderer.invoke('ride-build-log',ids,approved),
+  rideOffsetSave:seconds=>ipcRenderer.invoke('ride-offset-save',seconds),
+  rideOffsetLoad:()=>ipcRenderer.invoke('ride-offset-load'),
   rideSave:settings=>ipcRenderer.invoke('ride-save',settings),
   rideLoad:()=>ipcRenderer.invoke('ride-load'),
   rideFeatures:o=>ipcRenderer.invoke('ride-features',o),

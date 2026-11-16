@@ -138,7 +138,7 @@ handle('preview', async id => {
 const editing = require('./editing.cjs')({app,dialog,shell,handle,event,inspect,getWindow:()=>window,getTask:()=>task,setTask:value=>task=value,setOutput:value=>lastOutput=value,setReport:value=>lastReport=value});
 require('./services.cjs')({editing,app,dialog,shell,clipboard,handle,event,selected,known,view,inspect,getWindow:()=>window,getTask:()=>task,setTask:value=>task=value,getOutput:()=>lastOutput,getDestinations:()=>({outputPath,conversionFolder}),setDestinations:data=>{outputPath=data.outputPath;conversionFolder=data.conversionFolder;}});
 
-const rideController=require('./ride.cjs')({getCreatedOrderLog:()=>orderLogController.getCreated(),dialog,shell,handle,inspect,selected,getWindow:()=>window,getTask:()=>task});
+const rideController=require('./ride.cjs')({getUserData:()=>app.getPath('userData'),getCreatedOrderLog:()=>orderLogController.getCreated(),dialog,shell,handle,inspect,selected,getWindow:()=>window,getTask:()=>task});
 
 const orderLogController=require('./order-log.cjs')({getRideVideo:()=>rideController.getVideo(),dialog,handle,inspect,event,getWindow:()=>window,getTask:()=>task,setTask:value=>task=value});
 
