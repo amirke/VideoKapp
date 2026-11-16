@@ -21,7 +21,7 @@ function buildReport({ files, output, result, error, metrics, startedAt }) {
     `Finished (UTC): ${new Date().toISOString()}`,
     `System: ${os.platform()} ${os.release()} ${os.arch()}`,
     `CPU: ${os.cpus()[0]?.model || 'unavailable'}; logical processors: ${os.cpus().length}`,
-    '', 'TIMELINE LOG', d.timelinePath || d.timelineWarning || 'Not available.', '', 'MODE',
+    '', 'TIMELINE LOG', d.timelinePath || d.timelineWarning || 'Not available.', '', 'RECORDING TIME EVIDENCE',JSON.stringify(d.timingDecisions||[]), 'Inferred camera-wall times require Auto interpretation and the selected video zone in Ride Player. This report is not a synchronization timeline.', '', 'MODE',
     d.compression?.enabled ? `Video: ${d.compression.codec}, preset ${d.compression.preset}, ${d.compression.mode === 'quality' ? 'CRF' : 'average Mbps'} ${d.compression.value}; audio: ${d.compression.audio}. Merge and compression in one pass.` : d.compression?.copySpeed ? `Original-quality time-lapse: video packets copied, timestamps accelerated ${d.compression.copySpeed}x; audio removed; no re-encoding.` : 'Video/audio stream copy; no re-encoding.',
     `Conversion settings: ${JSON.stringify(d.compression || { enabled: false })}`,
     ...(d.summary ? ['SUMMARY EDIT: '+JSON.stringify(d.summary), 'Summary clips were '+(d.summary.quality==='copy'?'copied without re-encoding':'encoded')+' before the final stream-copy join. Size/rate/stage figures below describe that final join and its temporary clip inputs; summary.totalMs covers the complete export.'] : []),

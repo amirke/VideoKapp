@@ -38,8 +38,8 @@ function run(exe, args, { input, signal, progress, timeout = 0, outputFd } = {})
 
 function recordingDate(metadata) {
   const tags = [metadata.format?.tags, ...(metadata.streams || []).map(s => s.tags)];
-  for (const tag of tags) {
-    for (const key of ['com.apple.quicktime.creationdate', 'creation_time', 'date']) {
+  for (const key of ['com.apple.quicktime.creationdate', 'creation_time', 'date']) {
+    for (const tag of tags) {
       if (!tag?.[key]) continue;
       const time = Date.parse(tag[key]);
       if (Number.isFinite(time) && time > 0) return time;
@@ -163,7 +163,7 @@ async function merge(files, output, { signal, onProgress = () => {}, compression
     diagnostics.totalMs = performance.now() - started;
     completed = true;
     let timelinePath=null,timelineWarning='';
-    try{const timeline=require('./timeline.cjs');timelinePath=(await timeline.save(output,await timeline.build(files,diagnostics.compression))).path;diagnostics.timelinePath=timelinePath;}
+    try{const timeline=require('./timeline.cjs');const segments=await timeline.build(files,diagnostics.compression);diagnostics.timingDecisions=segments.map(s=>({source:s.source,decision:s.timingDecision,utcStart:s.utcStart}));timelinePath=(await timeline.save(output,segments)).path;diagnostics.timelinePath=timelinePath;}
     catch(e){timelineWarning='Timeline LOG was not saved: '+e.message;diagnostics.timelineWarning=timelineWarning;}
     onProgress(1);
     return {timelinePath,
