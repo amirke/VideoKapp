@@ -16,12 +16,12 @@
   const delta=(raw-named)/1000;
   if(Math.abs(delta-duration)>2)return fallback;
   if(Math.abs(delta)>=898&&Math.abs(delta-Math.round(delta/900)*900)<=2)return {...fallback,reason:'End-time evidence is ambiguous with a time-zone offset; no automatic correction.'};
-  return {basis:'camera-wall-end',confidence:'inferred',rawMetadata:raw,duration,filenameWall:stamp,residualSeconds:delta-duration,startWall:wall(raw-duration*1000,'UTC'),reason:'Metadata minus source duration agrees with filename within 2 seconds. End-of-clip camera time inferred; selected video zone required. Camera clock accuracy is unverified.'};
+  return {basis:'camera-wall-end',confidence:'inferred',rawMetadata:raw,duration,filenameWall:stamp,residualSeconds:delta-duration,startWall:wall(raw-duration*1000,'UTC'),startSubsecondMs:new Date(raw-duration*1000).getUTCMilliseconds(),reason:'Metadata minus source duration agrees with filename within 2 seconds. End-of-clip camera time inferred; selected video zone required. Camera clock accuracy is unverified.'};
  }
  function interpret(log,mode,tz){
   if(!log)return null;
   return {...log,segments:log.segments.map(s=>{
-   if(mode==='auto'){const e=evidence(s);if(e.basis==='camera-wall-end')return {...s,utcStart:utc(e.startWall,tz)+(s.sourceElapsed||0)*1000,timingDecision:e};return {...s,timingDecision:e};}
+   if(mode==='auto'){const e=evidence(s);if(e.basis==='camera-wall-end')return {...s,utcStart:utc(e.startWall,tz)+(e.startSubsecondMs||0)+(s.sourceElapsed||0)*1000,timingDecision:e};return {...s,timingDecision:e};}
    if(!mode||mode==='absolute')return {...s};
    const elapsed=s.sourceElapsed||0;let start;
    if(mode==='filename'){

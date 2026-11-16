@@ -6,6 +6,7 @@ test('auto end-time evidence preserves originals and applies trim and zone once'
  const raw=Date.parse('2026-11-13T11:51:47Z'),source='20261113114648_000185.MP4';
  const file={path:require('node:path').join(require('node:os').tmpdir(),'missing-timeline-'+process.pid,source),duration:300,recorded:raw};
  const segments=await timeline.sourceSegments(file);assert.equal(segments[0].utcStart,null);assert.equal(segments[0].sourceTiming.recorded,raw);assert.equal(segments[0].timingDecision.basis,'camera-wall-end');
+ const fractional=structuredClone(segments[0]);fractional.sourceTiming.duration=299.5;assert.equal(T.interpret({segments:[fractional]},'auto','Asia/Jerusalem').segments[0].utcStart%1000,500);
  const before=JSON.stringify(segments),r=T.interpret({segments},'auto','Asia/Jerusalem');assert.equal(T.wall(r.segments[0].utcStart,'Asia/Jerusalem'),'2026-11-13T11:46:47');assert.equal(JSON.stringify(segments),before);
  const trimmed=timeline.transform(segments,10,30,2),a=T.interpret({segments:trimmed},'auto','Asia/Jerusalem');assert.equal(T.wall(a.segments[0].utcStart,'Asia/Jerusalem'),'2026-11-13T11:46:57');assert.equal(a.segments[0].rate,2);assert.deepEqual(T.interpret(a,'auto','Asia/Jerusalem'),a);
  const legacy={segments:[{...segments[0],utcStart:raw}]};assert.equal(T.interpret(legacy,'auto','Asia/Jerusalem').segments[0].utcStart,r.segments[0].utcStart);assert.equal(T.interpret({segments},'local-end','Asia/Jerusalem').segments[0].utcStart,r.segments[0].utcStart);
