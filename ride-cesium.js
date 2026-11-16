@@ -31,9 +31,9 @@ class RideCesiumMap extends RideMultiMap {
  updateCamera(p,heading,follow,align){if(!this.cesium)return super.updateCamera(p,heading,follow,align);RideCanvasMap.prototype.updateCamera.call(this,p,heading,follow,align);if(follow&&p||align||this.cameraBearing!==this.bearing){this.setCesiumCamera();this.cameraBearing=this.bearing;}}
  setPitch(value){this.pitch=value;if(this.cesium)this.setCesiumCamera();else this.gl?.setPitch(Math.min(85,value));}
  fit(){if(!this.cesium)return super.fit();RideCanvasMap.prototype.fit.call(this);this.setCesiumCamera();}
- zoom(delta){if(!this.cesium)return super.zoom(delta);this.z=Math.max(2,Math.min(18,this.z+delta));this.setCesiumCamera();this.zoomStatus();}
+ zoom(delta){if(!this.cesium)return super.zoom(delta);this.z=Math.max(0,Math.min(18,this.z+delta));this.setCesiumCamera();this.zoomStatus();}
  resize(){if(this.cesium)this.cesium.resize();else this.gl?.resize();}
- zoomStatus(){if(!this.cesium)return super.zoomStatus();this.syncZoomSlider(this.z,2,18,.1);const el=document.getElementById('ride-map-zoom');if(el)el.textContent='CesiumJS · requested view zoom '+this.z.toFixed(1)+' · camera height '+Math.round(this.cesium.camera.positionCartographic.height)+' m · source imagery limit '+(RideProviders.providers[this.provider].max??18)+' · perspective changes local scale.';}
+ zoomStatus(){if(!this.cesium)return super.zoomStatus();this.syncZoomSlider(this.z,0,18,.1);const el=document.getElementById('ride-map-zoom');if(el)el.textContent='CesiumJS · requested view zoom '+this.z.toFixed(1)+' · camera height '+Math.round(this.cesium.camera.positionCartographic.height)+' m · source imagery limit '+(RideProviders.providers[this.provider].max??18)+' · perspective changes local scale.';}
  ready(){return !!this.cesium&&!this.cesiumLoading&&this.cesium.scene.globe.tilesLoaded&&!this.mapError;}
  async waitForTiles(timeout=30000){if(!this.cesium)return super.waitForTiles(timeout);const until=Date.now()+timeout;while(Date.now()<until){if(this.mapError)throw Error(this.mapError);if(this.ready())return;await new Promise(r=>setTimeout(r,100));}throw Error('Cesium map loading timed out. Refresh map.');}
  draw(){if(!this.cesium)return super.draw();const C=Cesium,v=this.cesium;this.layers();const style=this.routeStyle();
