@@ -11,6 +11,7 @@
  function layoutImage(){const w=wrap.clientWidth,h=wrap.clientHeight,ratio=v.videoWidth&&v.videoHeight?v.videoWidth/v.videoHeight:16/9;const width=Math.min(w,h*ratio),height=width/ratio;Object.assign(imageArea.style,{left:(w-width)/2+'px',top:(h-height)/2+'px',width:width+'px',height:height+'px'});containBox();window.resizeRideMap?.();}
  v.addEventListener('loadedmetadata',layoutImage);v.addEventListener('resize',layoutImage);
  const box=document.createElement('div');box.className='ride-live-box';box.hidden=true;box.innerHTML='<div class="ride-live-handle">GPS map — drag to move</div>';imageArea.append(box);
+ window.rideMapCrop=window.RidePipCrop?.attach(controls,stage,crop=>{const credit=$('ride-pip-credits');if(credit){credit.style.left='calc('+crop.left+'% + 4px)';credit.style.right='calc('+crop.right+'% + 4px)';credit.style.bottom='calc('+crop.bottom+'% + 2px)';}});
  const reference=document.createElement('div');reference.id='ride-sync-reference';reference.textContent='Before offset';reference.hidden=true;stage.append(reference);
  const markerLayer=document.createElement('div');markerLayer.className='ride-interest-layer';stage.append(markerLayer);
  let gpsFormatter=null,gpsFormatterZone=null;let ctx=null,route=null,turns=[],loaded=null,features=[],busy=false,generation=0,lastFetch=-Infinity,lastPlan=0,lastDraw=0,stopped=false,lookupError='';
