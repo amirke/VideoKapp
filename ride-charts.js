@@ -2,10 +2,10 @@
 (()=>{
  const $=id=>document.getElementById(id),ns='http://www.w3.org/2000/svg';
  const section=document.createElement('details');section.id='ride-charts';section.open=true;
- const heading=document.createElement('summary');heading.textContent='Elevation & heart rate · elapsed GPS time';section.append(heading);
+ const heading=document.createElement('summary');heading.textContent='Elevation, speed & heart rate · elapsed GPS time';section.append(heading);
  document.querySelector('.ride-live-stage').after(section);
  const make=(tag,attrs={},text)=>{const e=document.createElementNS(ns,tag);for(const[k,v]of Object.entries(attrs))e.setAttribute(k,v);if(text!=null)e.textContent=text;return e;};
- const plots=[['ele','Elevation','m','#54d4a4'],['hr','Heart rate','bpm','#ff8d9a']].map(([key,label,unit,color])=>{const row=document.createElement('div'),title=document.createElement('div'),svg=make('svg',{viewBox:'0 0 1000 110',preserveAspectRatio:'none',role:'img','aria-label':label+' over elapsed GPS time'});row.className='ride-chart';title.className='ride-chart-value';row.append(title,svg);section.append(row);return {key,label,unit,color,title,svg};});
+ const plots=[['ele','Elevation','m','#54d4a4'],['speed','Speed (GPS-derived)','km/h','#74baff'],['hr','Heart rate','bpm','#ff8d9a']].map(([key,label,unit,color])=>{const row=document.createElement('div'),title=document.createElement('div'),svg=make('svg',{viewBox:'0 0 1000 110',preserveAspectRatio:'none',role:'img','aria-label':label+' over elapsed GPS time'});row.className='ride-chart';title.className='ride-chart-value';row.append(title,svg);section.append(row);return {key,label,unit,color,title,svg};});
  let previous=null,oldGap=null,start=0,end=0;
  const elapsed=ms=>{const s=Math.max(0,Math.floor(ms/1000));return Math.floor(s/3600)+':'+String(Math.floor(s/60)%60).padStart(2,'0')+':'+String(s%60).padStart(2,'0');};
  const x=t=>55+930*(t-start)/Math.max(1,end-start);

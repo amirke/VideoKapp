@@ -1,4 +1,4 @@
-# VideoKapp — ChronoMerge 3.12.6
+# VideoKapp — ChronoMerge 3.12.7
 
 Windows desktop video merging, conversion, GPS ride playback and AI-assisted editing.
 The application window and executable currently use the name ChronoMerge.
@@ -79,9 +79,9 @@ Video and GPS have separate seek bars. Video Play uses the displayed video frame
 
 Optional Auto zoom targets a chosen count of app-added markers within 500 metres of the route: POIs and road junctions from OpenStreetMap, plus turns calculated locally. Search radius limits zoom-out; it does not count labels baked into map images. Nearby coordinates/radius are sent to the public [Overpass service](https://overpass.private.coffee/), never the video or GPX file. Lookup is cancellable, capped at 8 MB, cached for one hour and throttled to one request per 45 seconds. Service failures are shown; local turns still work. Public service availability and POI completeness are not guaranteed.
 
-Ride Player 3.12.6 adds optional map camera smoothing (default 1.5 seconds), a North up lock, and an explicit breakdown of applied video timestamp interpretation, recording-end adjustment, manual correction and GPS correction. Smoothing changes the camera only, not the GPS marker or synchronization. No clock correction is inferred or automatically applied.
+Ride Player 3.12.7 adds optional map camera smoothing (default 1.5 seconds), a North up lock, and an explicit breakdown of applied video timestamp interpretation, recording-end adjustment, manual correction and GPS correction. Smoothing changes the camera only, not the GPS marker or synchronization. No clock correction is inferred or automatically applied.
 
-## Live timing calibration and Hebrew vector labels (3.12.6)
+## Live timing calibration and Hebrew vector labels (3.12.7)
 
 The Video → GPS offset field above the video is the same manual correction used by Ride Player, not an additional offset. Positive values select later GPS timestamps. The video clock and selected GPS clock are shown separately; the blue reference marker is the GPS coordinate before manual correction, and red is after correction. Neither a camera watermark nor a zero calculated clock difference proves synchronization to the GPS device. No offset is inferred or automatically applied.
 
@@ -89,7 +89,7 @@ Labels layer is independent of Base map and Overlay. OpenFreeMap Liberty and Bri
 
 Video → GPS offset accepts numeric minutes and seconds, including negative and fractional values (combined limit: one year). ±15 minute and ±1 second buttons remain available. The total is saved in seconds. Live PiP width ranges from 10–95%; drag its border or corners to resize while retaining the map aspect ratio. Map zoom can reach level 0. Video and GPS play buttons show their current play/pause state.
 
-## Ride Player layout (3.12.6)
+## Ride Player layout (3.12.7)
 
 The page follows the working sequence: file loading, paired video/GPS viewing, synchronization, map appearance, and export. File buttons and their paths share three cards. Advanced timing/map controls and diagnostics are collapsible. The before-offset marker is hidden at zero offset and repositions when the map or PiP is resized. Existing control IDs, CFG operations, draggable split and PiP behavior are preserved.
 
@@ -102,3 +102,5 @@ Save offset stores the current combined minute/second correction in ride-offset.
 Live map PiP is constrained to the displayed video image, excluding letterbox bars, including dragging, resizing, and viewport changes. Full screen expands the video pane with its map and playback controls; Exit full screen or Esc restores the normal view.
 
 Ride Player route selection accepts GPX only. Elevation (metres) and heart rate (bpm) appear in collapsible charts below the video, including full screen. The horizontal axis is elapsed GPS time; the moving cursor uses the same corrected absolute time as the map. Missing values and gaps are not connected. Series geometry is rebuilt only when route data or gap settings change.
+
+Sensor graphs are ordered elevation, GPS-derived speed (km/h), then heart rate. Speed uses distance between GPS samples divided by elapsed time, as in the live map readout.
