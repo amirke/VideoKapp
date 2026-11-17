@@ -140,6 +140,7 @@ require('./services.cjs')({editing,app,dialog,shell,clipboard,handle,event,selec
 
 const rideController=require('./ride.cjs')({getUserData:()=>app.getPath('userData'),getCreatedOrderLog:()=>orderLogController.getCreated(),dialog,shell,handle,inspect,selected,getWindow:()=>window,getTask:()=>task});
 
+require('./ride-markers.cjs')({handle,getVideo:()=>rideController.getVideo()});
 const orderLogController=require('./order-log.cjs')({getRideVideo:()=>rideController.getVideo(),dialog,handle,inspect,event,getWindow:()=>window,getTask:()=>task,setTask:value=>task=value});
 
 require('./ride-diagnostic.cjs')({handle,reveal:p=>shell.showItemInFolder(p),directory:()=>rideController.getVideo()?path.dirname(rideController.getVideo().path):path.join(app.getPath('userData'),'ride-logs'),version:require('./package.json').version});
