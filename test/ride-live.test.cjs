@@ -28,7 +28,7 @@ test('separate GPS/video timelines share absolute time; PiP moves the same map; 
  $('ride-fine-offset').value=-123.5;$('ride-fine-offset').onchange();assert.equal(Number($('ride-offset').value),-123.5);$('ride-offset-zero').onclick();
  const stage=w.document.querySelector('.ride-map-stage');$('ride-live-pip').checked=true;$('ride-live-pip').onchange();assert.equal(stage.parentNode.className,'ride-live-box');$('ride-live-pip').checked=false;$('ride-live-pip').onchange();assert.equal(stage.parentNode.className,'ride-map-pane');
  $('ride-live-offset').value=-63;$('ride-fine-offset').value=-11;await $('ride-offset-save').onclick();assert.equal(persisted,-3791);assert.equal(Number($('ride-offset').value),-3791);assert.equal($('ride-offset-save').dataset.actionState,'ok');assert.match($('ride-offset-saved').textContent,/-63 min -11 s/);$('ride-second-plus').onclick();assert.equal($('ride-offset-save').dataset.actionState,'default');assert.equal(persisted,-3791);
- assert($('ride-map-follow').checked);assert($('ride-map-align').checked);
+ assert($('ride-map-follow').checked);assert($('ride-north-up').checked);assert.equal($('ride-map-align').checked,false);$('ride-map-align').checked=true;$('ride-map-align').onchange();assert.equal($('ride-north-up').checked,false);$('ride-north-up').checked=true;$('ride-north-up').onchange();assert.equal($('ride-map-align').checked,false);
  }finally{w.close();}
 });
 

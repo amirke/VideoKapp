@@ -1,4 +1,4 @@
-# VideoKapp — ChronoMerge 3.13.0
+# VideoKapp — ChronoMerge 3.13.1
 
 Windows desktop video merging, conversion, GPS ride playback and AI-assisted editing.
 The application window and executable currently use the name ChronoMerge.
@@ -79,9 +79,9 @@ Video and GPS have separate seek bars. Video Play uses the displayed video frame
 
 Optional Auto zoom targets a chosen count of app-added markers within 500 metres of the route: POIs and road junctions from OpenStreetMap, plus turns calculated locally. Search radius limits zoom-out; it does not count labels baked into map images. Nearby coordinates/radius are sent to the public [Overpass service](https://overpass.private.coffee/), never the video or GPX file. Lookup is cancellable, capped at 8 MB, cached for one hour and throttled to one request per 45 seconds. Service failures are shown; local turns still work. Public service availability and POI completeness are not guaranteed.
 
-Ride Player 3.13.0 adds optional map camera smoothing (default 1.5 seconds), a North up lock, and an explicit breakdown of applied video timestamp interpretation, recording-end adjustment, manual correction and GPS correction. Smoothing changes the camera only, not the GPS marker or synchronization. No clock correction is inferred or automatically applied.
+Ride Player 3.13.1 adds optional map camera smoothing (default 1.5 seconds), a North up lock, and an explicit breakdown of applied video timestamp interpretation, recording-end adjustment, manual correction and GPS correction. Smoothing changes the camera only, not the GPS marker or synchronization. No clock correction is inferred or automatically applied.
 
-## Live timing calibration and Hebrew vector labels (3.13.0)
+## Live timing calibration and Hebrew vector labels (3.13.1)
 
 The Video → GPS offset field above the video is the same manual correction used by Ride Player, not an additional offset. Positive values select later GPS timestamps. The video clock and selected GPS clock are shown separately; the blue reference marker is the GPS coordinate before manual correction, and red is after correction. Neither a camera watermark nor a zero calculated clock difference proves synchronization to the GPS device. No offset is inferred or automatically applied.
 
@@ -89,7 +89,7 @@ Labels layer is independent of Base map and Overlay. OpenFreeMap Liberty and Bri
 
 Video → GPS offset accepts numeric minutes and seconds, including negative and fractional values (combined limit: one year). ±15 minute and ±1 second buttons remain available. The total is saved in seconds. Live PiP width ranges from 10–95%; drag its border or corners to resize while retaining the map aspect ratio. Map zoom can reach level 0. Video and GPS play buttons show their current play/pause state.
 
-## Ride Player layout (3.13.0)
+## Ride Player layout (3.13.1)
 
 The page follows the working sequence: file loading, paired video/GPS viewing, synchronization, map appearance, and export. File buttons and their paths share three cards. Advanced timing/map controls and diagnostics are collapsible. The before-offset marker is hidden at zero offset and repositions when the map or PiP is resized. Existing control IDs, CFG operations, draggable split and PiP behavior are preserved.
 
@@ -108,3 +108,5 @@ Sensor graphs are ordered elevation, GPS-derived speed (km/h), then heart rate. 
 Ride editing controls: wheel over the video timeline seeks by one second (down forward, up backward); buttons skip ±10/30/60 seconds. Edit markers (interest/local start/local end plus optional notes) auto-save beside the video as .markers.json, validated against video identity. Start/end markers can set the existing IN/OUT export selection. Markers are separate from CFG parameters. GPS data overlay selects speed, elevation, heart rate, distance, GPS time and coordinates. Drag the panel or its corner to position/resize inside the actual video image. Ride CFG saves panel settings. PiP preview and export include the same transparent GPS panel, rendered on the synchronized map clock; export retains progress and STOP.
 
 Show output dimensions adds pixel-width/height arrows for the actual video frame. Ride export keeps this source frame size; player letterbox margins are excluded. Dark source-edge estimates are based on the displayed frame and explicitly uncertain. Measurement guides are hidden during PiP capture and are not burned into the result.
+
+North up is the default map orientation; enabling Align with ride disables North up and vice versa. Live GPS PiP sits next to Live map PiP and independently toggles the data panel inside the video. Field choices and panel width remain in GPS data overlay.
